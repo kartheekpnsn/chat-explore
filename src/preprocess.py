@@ -1,10 +1,13 @@
 import pandas as pd
-import math, os, sys, glob
+import math, os, sys, glob, re
 import numpy as np
 import warnings, logging, datetime
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+# sys.path.insert(0, ".")
+from action_logging import Logger
 
 warnings.filterwarnings('ignore')
 
@@ -16,7 +19,7 @@ class Preprocess:
         :param input_file:
         """
         self.file = input_file
-        self.logger = Logger(log_flag = False)
+        self.logger = Logger(log_flag = True, log_file = "preprocess", log_path = "../logs/")
         self.data = None
         self.data_backup = None
         self.pd_data = None
@@ -128,5 +131,16 @@ class Preprocess:
         :return:
         """
         if len(np.unique(self.pd_data['User'])) != 2:
-            self.logger.write_logger("You need to have 2 users in the chat. Not more, Not less !")
+            self.logger.write_logger("You need to have 2 users in the chat. Not more, Not less !", error = True)
             sys.exit()
+        else:
+            self.logger.write_logger("You Chat data have 2 users.", error = False)
+
+preprocess = Preprocess(input_file = '../data/input.txt')
+preprocess.read_file()
+preprocess.print_sample(10)
+preprocess.clean_data()
+preprocess.drop_message()
+preprocess.prepare_df()
+preprocess.check_n_users()
+print(preprocess.pd_data.head())

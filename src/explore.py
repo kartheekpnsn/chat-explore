@@ -12,3 +12,4 @@ class Explore:
 
     def __init__(self, pd_data):
         self.pd_data = pd_data
+
