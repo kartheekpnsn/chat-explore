@@ -13,13 +13,17 @@ warnings.filterwarnings('ignore')
 
 class Preprocess:
 
-    def __init__(self, input_file):
+    def __init__(self, input_file, logger = None):
         """
         Initialize Preprocess class
         :param input_file:
         """
         self.file = input_file
-        self.logger = Logger(log_flag = True, log_file = "preprocess", log_path = "../logs/")
+        if logger is None:
+            self.logger = Logger(log_flag = True, log_file = "preprocess", log_path = "../logs/")
+        else:
+            self.logger = logger
+        self.users = None
         self.data = None
         self.data_backup = None
         self.pd_data = None
@@ -30,6 +34,7 @@ class Preprocess:
         Also, takes backup just to have control on things.
         :return:
         """
+        self.logger.write_logger('In preprocess.py (read_file): Reading of input file: ' + self.file + ' starts')
         f = open(self.file, 'r', encoding = "utf8")
         self.data = f.read()
         f.close()
@@ -37,6 +42,7 @@ class Preprocess:
 
         # Save temporary value
         self.data_backup = self.data.copy()
+        self.logger.write_logger('In preprocess.py (read_file): Reading of input file: ' + self.file + ' ends')
 
     def print_sample(self, n_lines = 10):
         """
@@ -44,7 +50,9 @@ class Preprocess:
         :param n_lines:
         :return:
         """
+        self.logger.write_logger('In preprocess.py (print_sample): Printing of data (first ' + str(n_lines) + ' lines) starts')
         print(self.data[:n_lines])
+        self.logger.write_logger('In preprocess.py (print_sample): Printing of data (first ' + str(n_lines) + ' lines) ends')
 
     def add_missing_info(self, current_line, previous_line):
         """
@@ -58,44 +66,54 @@ class Preprocess:
         current_line = previous_line_ts + " - " + previous_line_name + ": " + current_line
         return current_line
 
-    def clean_data(self):
+    def clean_data(self, log = False):
         """
         Cleans data by adding missing information
         :return:
         """
+        self.logger.write_logger('In preprocess.py (clean_data): Cleaning of data starts')
         self.data = self.data_backup.copy()
         for idx, line in enumerate(self.data):
             split_part = line.split('-')
             if len(split_part) == 0:
-                self.logger.write_logger(f'== Before Condition 1: {self.data[idx]}')
+                if log:
+                    self.logger.write_logger(f'== Before Condition 1: {self.data[idx]}')
                 self.data[idx] = self.add_missing_info(self.data[idx], self.data[idx - 1])
-                self.logger.write_logger(f'== After Condition 1: {self.data[idx-1]}')
-                self.logger.write_logger(f'== After Condition 1: {self.data[idx]}')
+                if log:
+                    self.logger.write_logger(f'== After Condition 1: {self.data[idx-1]}')
+                    self.logger.write_logger(f'== After Condition 1: {self.data[idx]}')
             else:
                 split_part = split_part[0].strip()
                 split_part = split_part.split(",")
                 if len(split_part) < 2:
-                    self.logger.write_logger(f'== Before Condition 2: {self.data[idx]}')
+                    if log:
+                        self.logger.write_logger(f'== Before Condition 2: {self.data[idx]}')
                     self.data[idx] = self.add_missing_info(self.data[idx], self.data[idx - 1])
-                    self.logger.write_logger(f'== After Condition 2: {self.data[idx-1]}')
-                    self.logger.write_logger(f'== After Condition 2: {self.data[idx]}')
+                    if log:
+                        self.logger.write_logger(f'== After Condition 2: {self.data[idx-1]}')
+                        self.logger.write_logger(f'== After Condition 2: {self.data[idx]}')
                 else:
                     split_part = split_part[1].strip()
                     split_part = split_part.split(" ")
                     if len(split_part) < 2:
-                        self.logger.write_logger(f'== Before Condition 3: {self.data[idx]}')
+                        if log:
+                            self.logger.write_logger(f'== Before Condition 3: {self.data[idx]}')
                         self.data[idx] = self.add_missing_info(self.data[idx], self.data[idx - 1])
-                        self.logger.write_logger(f'== After Condition 3: {self.data[idx-1]}')
-                        self.logger.write_logger(f'== After Condition 3: {self.data[idx]}')
+                        if log:
+                            self.logger.write_logger(f'== After Condition 3: {self.data[idx-1]}')
+                            self.logger.write_logger(f'== After Condition 3: {self.data[idx]}')
                     else:
                         split_part = split_part[1].strip()
                         if split_part != 'am' and split_part != 'pm':
-                            self.logger.write_logger(f'== Before Condition 4: {self.data[idx]}')
+                            if log:
+                                self.logger.write_logger(f'== Before Condition 4: {self.data[idx]}')
                             self.data[idx] = self.add_missing_info(self.data[idx], self.data[idx - 1])
-                            self.logger.write_logger(f'== After Condition 4: {self.data[idx-1]}')
-                            self.logger.write_logger(f'== After Condition 4: {self.data[idx]}')
+                            if log:
+                                self.logger.write_logger(f'== After Condition 4: {self.data[idx-1]}')
+                                self.logger.write_logger(f'== After Condition 4: {self.data[idx]}')
                         else:
                             'No correction needed'
+        self.logger.write_logger('In preprocess.py (clean_data): Cleaning of data ends')
 
     def drop_message(self, contains = 'Messages to this chat and calls are now secured with end-to-end encryption'):
         """
@@ -103,7 +121,9 @@ class Preprocess:
         :param contains:
         :return:
         """
+        self.logger.write_logger('In preprocess.py (drop_message): Dropping message containing: ' + contains + ' starts')
         self.data = [line for line in self.data if contains not in line]
+        self.logger.write_logger('In preprocess.py (drop_message): Dropping message containing: ' + contains + ' ends')
 
     def prepare_df(self):
         """
@@ -113,6 +133,8 @@ class Preprocess:
         timestamps = []
         users = []
         messages = []
+        self.logger.write_logger('In preprocess.py (prepare_df): Preparation of data frame starts')
+
         for line in self.data:
             timestamps.append(line.split("-")[0].strip())
             sub_line = line.split("-")[1].strip().split(":")
@@ -123,6 +145,8 @@ class Preprocess:
         self.pd_data['Timestamp'] = pd.to_datetime(self.pd_data['Timestamp'])
         self.pd_data['Date'] = self.pd_data['Timestamp'].dt.strftime('%d-%m-%Y')
         self.pd_data['Weekday'] = self.pd_data['Timestamp'].dt.strftime('%a')
+        self.users = list(set(users))
+        self.logger.write_logger('In preprocess.py (prepare_df): Preparation of data frame ends')
 
     def check_n_users(self):
         """
@@ -131,16 +155,7 @@ class Preprocess:
         :return:
         """
         if len(np.unique(self.pd_data['User'])) != 2:
-            self.logger.write_logger("You need to have 2 users in the chat. Not more, Not less !", error = True)
+            self.logger.write_logger("In preprocess.py (check_n_users): You need to have 2 users in the chat. Not more, Not less !", error = True)
             sys.exit()
         else:
-            self.logger.write_logger("You Chat data have 2 users.", error = False)
-
-preprocess = Preprocess(input_file = '../data/input.txt')
-preprocess.read_file()
-preprocess.print_sample(10)
-preprocess.clean_data()
-preprocess.drop_message()
-preprocess.prepare_df()
-preprocess.check_n_users()
-print(preprocess.pd_data.head())
+            self.logger.write_logger("In preprocess.py (check_n_users): You Chat data have 2 users.", error = False)
