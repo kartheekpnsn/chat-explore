@@ -11,6 +11,7 @@ from action_logging import Logger
 
 warnings.filterwarnings('ignore')
 
+
 class Preprocess:
 
     def __init__(self, input_file, logger = None):
@@ -50,9 +51,11 @@ class Preprocess:
         :param n_lines:
         :return:
         """
-        self.logger.write_logger('In preprocess.py (print_sample): Printing of data (first ' + str(n_lines) + ' lines) starts')
+        self.logger.write_logger(
+            'In preprocess.py (print_sample): Printing of data (first ' + str(n_lines) + ' lines) starts')
         print(self.data[:n_lines])
-        self.logger.write_logger('In preprocess.py (print_sample): Printing of data (first ' + str(n_lines) + ' lines) ends')
+        self.logger.write_logger(
+            'In preprocess.py (print_sample): Printing of data (first ' + str(n_lines) + ' lines) ends')
 
     def add_missing_info(self, current_line, previous_line):
         """
@@ -121,7 +124,8 @@ class Preprocess:
         :param contains:
         :return:
         """
-        self.logger.write_logger('In preprocess.py (drop_message): Dropping message containing: ' + contains + ' starts')
+        self.logger.write_logger(
+            'In preprocess.py (drop_message): Dropping message containing: ' + contains + ' starts')
         self.data = [line for line in self.data if contains not in line]
         self.logger.write_logger('In preprocess.py (drop_message): Dropping message containing: ' + contains + ' ends')
 
@@ -142,8 +146,8 @@ class Preprocess:
             messages.append("-".join([v.strip() for v in sub_line[1:]]))
         self.pd_data = pd.DataFrame({'Timestamp': timestamps, 'User': users, 'Message': messages})[
             ['Timestamp', 'User', 'Message']]
-        self.pd_data['Timestamp'] = pd.to_datetime(self.pd_data['Timestamp'])
-        self.pd_data['Date'] = self.pd_data['Timestamp'].dt.strftime('%d-%m-%Y')
+        self.pd_data['Timestamp'] = pd.to_datetime(self.pd_data['Timestamp'], format = '%d/%m/%y, %I:%M %p')
+        self.pd_data['Date'] = self.pd_data['Timestamp'].dt.strftime('%d-%b-%Y')
         self.pd_data['Weekday'] = self.pd_data['Timestamp'].dt.strftime('%a')
         self.users = list(set(users))
         self.logger.write_logger('In preprocess.py (prepare_df): Preparation of data frame ends')
@@ -155,7 +159,17 @@ class Preprocess:
         :return:
         """
         if len(np.unique(self.pd_data['User'])) != 2:
-            self.logger.write_logger("In preprocess.py (check_n_users): You need to have 2 users in the chat. Not more, Not less !", error = True)
+            self.logger.write_logger(
+                "In preprocess.py (check_n_users): You need to have 2 users in the chat. Not more, Not less !",
+                error = True)
             sys.exit()
         else:
             self.logger.write_logger("In preprocess.py (check_n_users): You Chat data have 2 users.", error = False)
+
+    def write_data(self, path = '../data/clean_data.csv'):
+        """
+
+        :param path:
+        :return:
+        """
+        self.pd_data.to_csv(path, index = False)
