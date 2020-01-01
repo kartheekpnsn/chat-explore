@@ -2,6 +2,7 @@ import re
 import string
 import warnings
 import nltk
+import tldextract
 
 import numpy as np
 import pandas as pd
@@ -19,7 +20,8 @@ warnings.filterwarnings('ignore')
 
 class User:
 
-    def __init__(self, user_name = None, messages = None, timestamp = None, logger = None):
+    def __init__(self, user_name = None, color_map = None, messages = None, timestamp = None, users = None,
+                 logger = None):
 
         if logger is None:
             self.logger = Logger(log_flag = True, log_file = "user", log_path = "../logs/")
@@ -31,10 +33,21 @@ class User:
         self.user_name = user_name
         self.logger.write_logger(f'In user.py (__init__): Initializing members for user: {self.user_name} starts')
 
+        # Color code for the user;
+        if color_map is None:
+            self.user_color = "#2ecc71"  # green
+        else:
+            if self.user_name in color_map.keys():
+                self.user_color = color_map[self.user_name]
+            else:
+                self.user_color = "#2ecc71"  # green
+
         # Store the time stamp list for the user
         self.timestamp = timestamp
         # Store the message list for the user
         self.messages = messages
+        # Store the user list for the overall data
+        self.users = users
         # Pandas dataframe of messages and timestamps
         self.prepare_dataframe()
 
@@ -151,6 +164,8 @@ class User:
         """
         if self.user_name:
             self.data = pd.DataFrame({"TimeStamp": self.timestamp, 'Message': self.messages})
+            if self.users is not None:
+                self.data['User'] = self.users
             self.data['Date'] = self.data['TimeStamp'].dt.strftime('%d-%b-%Y')
             self.data['Weekday'] = self.data['TimeStamp'].dt.strftime('%A')
 
@@ -227,6 +242,14 @@ class User:
             return text
 
     @staticmethod
+    def remove_unicode(text):
+        """
+        :param text:
+        :return:
+        """
+        return text.encode('ascii', 'ignore').decode('utf-8')
+
+    @staticmethod
     def remove_deleted_message(text):
         """
 
@@ -269,6 +292,7 @@ class User:
         """
         self.logger.write_logger('In user.py (get_clean_messages): Cleaning of messages starts')
         self.data['Clean Message'] = self.data['Message'].apply(lambda x: self.remove_media(x))
+        self.data['Clean Message'] = self.data['Clean Message'].apply(lambda x: self.remove_unicode(x))
         self.data['Clean Message'] = self.data['Clean Message'].apply(lambda x: self.remove_deleted_message(x))
         self.data['Clean Message'] = self.data['Clean Message'].apply(lambda x: self.remove_missed_calls(x))
         self.logger.write_logger('In user.py (remove_emoticons): Removing punctuation starts')
@@ -342,6 +366,7 @@ class User:
             tokens = line.split()
             tokens = User.lower_case_words(tokens)
             tokens = User.club_telugu_words(words = tokens)
+            tokens = User.remove_stop_words(words = tokens)
             n_gram_words = [' '.join(v) for v in list(ngrams(tokens, n_grams))]
             n_gram_list.extend(n_gram_words)
         return n_gram_list
@@ -356,6 +381,7 @@ class User:
         words = " ".join(doc).split()
         words = User.lower_case_words(words)
         words = User.club_telugu_words(words = words)
+        words = User.remove_stop_words(words = words)
         bigrams = User.create_n_grams(doc_list = doc, n_grams = 2)
         trigrams = User.create_n_grams(doc_list = doc, n_grams = 3)
         words = [w for w in words if len(w) > 3]
@@ -497,24 +523,21 @@ class User:
         # doc = " ".join(self.data[self.data['Clean Message'] != ""]['Clean Message'].tolist())
         doc = self.data[self.data['Clean Message'] != ""]['Clean Message'].tolist()
         # Tokenize ==========================================================================
-        self.logger.write_logger('In user.py (get_word_statistics): Tokenization starts')
+        self.logger.write_logger('In user.py (prepare_word_statistics): Tokenization starts')
         self.words, self.bigrams, self.trigrams = self.tokenize_words(doc)
         self.logger.write_logger(
             f'\tFound {len(self.words)} words, {len(self.bigrams)} bigram words, {len(self.trigrams)} trigram words')
-        self.logger.write_logger('In user.py (get_word_statistics): Tokenization ends')
+        self.logger.write_logger('In user.py (prepare_word_statistics): Tokenization ends')
 
         # Remove stop words =================================================================
-        self.logger.write_logger('In user.py (get_word_statistics): Stop word removal starts')
-        self.clean_words = self.remove_stop_words(self.words)
-        self.clean_bigrams = self.remove_stop_words(self.bigrams)
-        self.clean_trigrams = self.remove_stop_words(self.trigrams)
-        self.logger.write_logger('In user.py (get_word_statistics): Stop word removal ends')
+        self.logger.write_logger('In user.py (prepare_word_statistics): Stop word removal starts')
+        self.logger.write_logger('In user.py (prepare_word_statistics): Stop word removal ends')
 
         # Lemmatize and Stem the words ======================================================
-        self.logger.write_logger('In user.py (get_word_statistics): Stemming and Lemmatization starts')
-        self.clean_words = self.lemmatize_and_stem(self.clean_words)
-        self.clean_bigrams = self.lemmatize_and_stem(self.clean_bigrams)
-        self.clean_trigrams = self.lemmatize_and_stem(self.clean_trigrams)
+        self.logger.write_logger('In user.py (prepare_word_statistics): Stemming and Lemmatization starts')
+        self.clean_words = self.lemmatize_and_stem(self.words)
+        self.clean_bigrams = self.lemmatize_and_stem(self.bigrams)
+        self.clean_trigrams = self.lemmatize_and_stem(self.trigrams)
         self.logger.write_logger('In user.py (get_word_statistics): Stemming and Lemmatization ends')
 
         pd_word_df = pd.DataFrame({"Word": self.clean_words})
@@ -731,7 +754,7 @@ class User:
         else:
             words = self.pd_trigrams_df['Word'].tolist()
             words = ["".join(w.title().split()) for w in words]
-        self.logger.write_logger(f'In user.py (get_top_k_emojis): Fetching  Words for WordCloud ends')
+        self.logger.write_logger(f'In user.py (get_words_for_wordcloud): Fetching  Words for WordCloud ends')
         return words
 
     def get_date_wise_n_msgs(self):
@@ -739,7 +762,44 @@ class User:
 
         :return:
         """
-        pass
+        self.logger.write_logger(f'In user.py (get_date_wise_n_msgs): Fetching Datewise # of Msgs starts')
+        result = self.data.groupby(['Date'])['Message'].count().reset_index()
+        result['Date'] = pd.to_datetime(result['Date'], format = '%d-%b-%Y')
+        result.rename(columns = {'Message': '# of Msgs'}, inplace = True)
+        result = result.sort_values(['Date'])
+        result['Date'] = result['Date'].dt.strftime('%d-%b-%Y')
+        self.logger.write_logger(f'In user.py (get_date_wise_n_msgs): Fetching Datewise # of Msgs ends')
+        return result
+
+    def get_domain_count(self):
+        """
+
+        :return:
+        """
+        self.logger.write_logger(f'In user.py (get_domain_count): Fetching Domains from links starts')
+        pd_links_df = self.data[self.data['Links Count'] > 0][['User', 'Links']]
+        pd_links_df['Links List'] = pd_links_df['Links'].apply(lambda x: x.split(";"))
+        pd_links_df = pd_links_df.explode("Links List")
+        pd_links_df['Links List'] = pd_links_df['Links List'].apply(lambda x: x.replace("https-", ""))
+        pd_links_df['Links List'] = pd_links_df['Links List'].apply(lambda x: x.replace("http-", ""))
+        pd_links_df['Links List'] = pd_links_df['Links List'].apply(lambda x: x.replace("https:", ""))
+        pd_links_df['Links List'] = pd_links_df['Links List'].apply(lambda x: x.replace("http:", ""))
+        pd_links_df['Domain'] = pd_links_df['Links List'].apply(lambda x: tldextract.extract(x).domain)
+        pd_links_df = pd_links_df.groupby(['User', 'Domain'])['Links List'].count().reset_index()
+        pd_links_df.rename(columns = {'Links List': 'Count'}, inplace = True)
+        self.logger.write_logger(f'In user.py (get_domain_count): Fetching Domains from links ends')
+        return pd_links_df
+
+    def get_userwise_emoji_count(self):
+        """
+
+        :return:
+        """
+        self.logger.write_logger(f'In user.py (get_userwise_emoji_count): Fetching Userwise Emoji Count starts')
+        pd_emojis_df = self.data[['User', 'Emoji Count', 'TimeStamp', 'Date']]
+        pd_emojis_df = pd_emojis_df.groupby(['Date', 'User'])['Emoji Count'].sum().reset_index()
+        self.logger.write_logger(f'In user.py (get_userwise_emoji_count): Fetching Userwise Emoji Count ends')
+        return pd_emojis_df
 
     def get_date_wise_avg_words(self):
         """
@@ -748,23 +808,45 @@ class User:
         """
         pass
 
-    def get_date_wise_n_emojis(self):
+    def get_userwise_monthly_word_counts(self):
         """
 
         :return:
         """
-        pass
+        _tmp = self.data.copy()
+        _tmp['Month'] = _tmp['TimeStamp'].dt.strftime('(%Y) %m')
+        pd_monthly_word_counts = _tmp.groupby(['Month', 'User'])['Word Count'].mean().reset_index()
+        return pd_monthly_word_counts
 
-    def get_day_wise_n_msgs(self):
+    def get_userwise_monthly_emoji_counts(self):
         """
 
         :return:
         """
-        pass
+        _tmp = self.data.copy()
+        _tmp['Month'] = _tmp['TimeStamp'].dt.strftime('(%Y) %m')
+        pd_monthly_emoji_counts = _tmp.groupby(['Month', 'User'])['Emoji Count'].mean().reset_index()
+        return pd_monthly_emoji_counts
 
-    def get_hour_wise_n_msgs(self):
+    @staticmethod
+    def harmonic_mean(x):
+        """
+
+        :param x:
+        :return:
+        """
+        return stats.hmean([v for v in x if v > 0])
+
+    def get_userwise_monthly_response_time(self, data):
         """
 
         :return:
         """
-        pass
+        response_obj = Response(data = data, logger = self.logger)
+        response_obj.group_the_data(). \
+            create_response_time()
+        response_obj.grouped_data['Month'] = response_obj.grouped_data['Timestamp'].dt.strftime('(%Y) %m')
+        userwise_monthly_response_time = response_obj.grouped_data.groupby(['Month', 'User'])[
+            'Response (Min)'].agg(User.harmonic_mean).reset_index()
+        userwise_monthly_response_time.loc[userwise_monthly_response_time['Response (Min)'] > 60, 'Response (Min)'] = -1
+        return userwise_monthly_response_time

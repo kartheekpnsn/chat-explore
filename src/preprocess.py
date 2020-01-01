@@ -25,6 +25,7 @@ class Preprocess:
         else:
             self.logger = logger
         self.users = None
+        self.color_map = {}
         self.data = None
         self.data_backup = None
         self.pd_data = None
@@ -150,6 +151,10 @@ class Preprocess:
         self.pd_data['Date'] = self.pd_data['Timestamp'].dt.strftime('%d-%b-%Y')
         self.pd_data['Weekday'] = self.pd_data['Timestamp'].dt.strftime('%a')
         self.users = list(set(users))
+        self.color_map = {
+            self.users[0]: "#e74c3c", # red
+            self.users[1]: "#3498db"  # blue
+        }
         self.logger.write_logger('In preprocess.py (prepare_df): Preparation of data frame ends')
 
     def check_n_users(self):
