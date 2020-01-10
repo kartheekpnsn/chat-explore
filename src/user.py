@@ -1,17 +1,16 @@
 import re
 import string
 import warnings
-import nltk
-import tldextract
 
 import numpy as np
 import pandas as pd
-
+import tldextract
 from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
 from nltk.util import ngrams
 from scipy import stats
-from nltk.stem import WordNetLemmatizer
-from nltk.stem import PorterStemmer
+
 from action_logging import Logger
 from response import Response
 
@@ -393,7 +392,9 @@ class User:
 
         :return:
         """
-        return [word for word in words if word not in stopwords.words('english')]
+        words = [word for word in words if word not in stopwords.words('english')]
+        words = [word for word in words if word not in ['haan', 'okay', 'hahaha', 'tc', 'sd']]
+        return words
 
     @staticmethod
     def lower_case_words(words):
@@ -592,6 +593,7 @@ class User:
             "Count": self.pd_emoji_df[self.pd_emoji_df['Emoji'] == most_used_emoji].shape[0]
         }
         self.logger.write_logger('In user.py (get_emoji_statistics): Formulating Emoji Statistics ends')
+        return self
 
     def get_total_stats(self):
         """
@@ -634,6 +636,7 @@ class User:
             self.data.TimeStamp)).days  # Get start date and recent date, calculate difference
         self.n_days_chatted = len(set(self.data.Date))
         self.logger.write_logger('In user.py (get_total_stats): Formulating Totals Statistics ends')
+        return self
 
     def get_avg_stats(self):
         """
@@ -655,6 +658,7 @@ class User:
         self.avg_words_per_message = np.round(np.mean(self.data['Word Count']))
         self.avg_letters_per_message = np.round(np.mean(self.data['Letter Count']))
         self.logger.write_logger('In user.py (get_avg_stats): Formulating Average Statistics ends')
+        return self
 
     def get_top_stats(self, data):
         """
@@ -689,6 +693,7 @@ class User:
         }  # more time
         self.logger.write_logger('\tIn user.py (get_top_stats): Formulating Longest Conversation Day Statistics ends')
         self.logger.write_logger('In user.py (get_top_stats): Formulating Top Statistics ends')
+        return self
 
     def get_response_time(self, data = None):
         """
@@ -700,11 +705,15 @@ class User:
         response_obj = Response(data = data, logger = self.logger)
         response_obj.group_the_data(). \
             create_response_time()
-        response_time = response_obj.grouped_data[
-            (response_obj.grouped_data['User'] == self.user_name) & (response_obj.grouped_data['Response (Min)'] > 0)][
-            'Response (Min)']
+        if self.user_name != 'Overall':
+            response_time = response_obj.grouped_data[
+                (response_obj.grouped_data['User'] == self.user_name) & (response_obj.grouped_data['Response (Min)'] > 0)][
+                'Response (Min)']
+        else:
+            response_time = response_obj.grouped_data[(response_obj.grouped_data['Response (Min)'] > 0)]['Response (Min)']
         self.avg_response_time = np.round(stats.hmean(response_time), 3)
         self.logger.write_logger(f'In user.py (get_response_time): Fetching response time ends')
+        return self
 
     def get_top_k_words(self, n_grams = 1, k = 20, normalize = True):
         """
@@ -816,6 +825,7 @@ class User:
         _tmp = self.data.copy()
         _tmp['Month'] = _tmp['TimeStamp'].dt.strftime('(%Y) %m')
         pd_monthly_word_counts = _tmp.groupby(['Month', 'User'])['Word Count'].mean().reset_index()
+        pd_monthly_word_counts.sort_values(['User', 'Month'], inplace = True)
         return pd_monthly_word_counts
 
     def get_userwise_monthly_emoji_counts(self):
@@ -826,6 +836,7 @@ class User:
         _tmp = self.data.copy()
         _tmp['Month'] = _tmp['TimeStamp'].dt.strftime('(%Y) %m')
         pd_monthly_emoji_counts = _tmp.groupby(['Month', 'User'])['Emoji Count'].mean().reset_index()
+        pd_monthly_emoji_counts.sort_values(['User', 'Month'], inplace = True)
         return pd_monthly_emoji_counts
 
     @staticmethod
@@ -849,4 +860,5 @@ class User:
         userwise_monthly_response_time = response_obj.grouped_data.groupby(['Month', 'User'])[
             'Response (Min)'].agg(User.harmonic_mean).reset_index()
         userwise_monthly_response_time.loc[userwise_monthly_response_time['Response (Min)'] > 60, 'Response (Min)'] = -1
+        userwise_monthly_response_time.sort_values(['User', 'Month'], inplace = True)
         return userwise_monthly_response_time

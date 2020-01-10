@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Explore - Statistics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 400;
+            color: #3b3b3b;
+            -webkit-font-smoothing: antialiased;
+            font-smoothing: antialiased;
+            background: #ede6e6;
+        }
+
+        @media screen and (max-width: 580px) {
+            body {
+                font-size: 16px;
+                line-height: 22px;
+            }
+        }
+
+        .wrapper {
+            margin: 0 auto;
+            padding: 40px;
+            max-width: 800px;
+        }
+
+        .table {
+            margin: 0 0 40px 0;
+            width: 100%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            display: table;
+        }
+
+        @media screen and (max-width: 580px) {
+            .table {
+                display: block;
+            }
+        }
+
+        .row {
+            display: table-row;
+            background: #f6f6f6;
+        }
+
+        .row:nth-of-type(odd) {
+            background: #e9e9e9;
+        }
+
+        .row.header {
+            font-weight: 900;
+            color: #ffffff;
+            background: #ea6153;
+        }
+
+        .heading {
+            font-size: 25px;
+            font-weight: bold;
+            color: #ea6153;
+        }
+
+        .row.green {
+            background: #27ae60;
+        }
+
+        .heading.green {
+            font-size: 25px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .row.blue {
+            background: #2980b9;
+        }
+
+        .heading.blue {
+            font-size: 25px;
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .row.violet {
+            background: #693a99;
+        }
+
+        .heading.violet {
+            font-size: 25px;
+            font-weight: bold;
+            color: #693a99;
+        }
+
+        .row.black {
+            background: #3d3b3b;
+        }
+
+        .heading.black {
+            font-size: 25px;
+            font-weight: bold;
+            color: #3d3b3b;
+        }
+
+        .row.yellow {
+            background: #f2bb27;
+        }
+
+        .heading.yellow {
+            font-size: 25px;
+            font-weight: bold;
+            color: #f2bb27;
+        }
+
+        @media screen and (max-width: 580px) {
+            .row {
+                padding: 14px 0 7px;
+                display: block;
+            }
+            .row.header {
+                padding: 0;
+                height: 6px;
+            }
+            .row.header .cell {
+                display: none;
+            }
+            .row .cell {
+                margin-bottom: 10px;
+            }
+            .row .cell:before {
+                margin-bottom: 3px;
+                content: attr(data-title);
+                min-width: 98px;
+                font-size: 10px;
+                line-height: 10px;
+                font-weight: bold;
+                text-transform: uppercase;
+                color: #969696;
+                display: block;
+            }
+        }
+
+        .cell {
+            font-size: 14px;
+            padding: 12px 12px;
+            min-width: 100px;
+            max-width: 100px;
+            display: table-cell;
+        }
+
+        @media screen and (max-width: 580px) {
+            .cell {
+                padding: 2px 16px;
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="wrapper">
+    <center><p style="font-size:40px; font-weight:bold; color:#24709c;">{title}</p></center><br/>
+    <center><p style="font-size:30px; font-weight:bold; color:#752cdb;">{sup_title}</p></center>
+    <br/><br/>
+    <!--Statistics shown here-->
+    <!-- ------------------------------------------------------------- !-->
+    <p style="font-size:35px; font-weight:bold;">Statistics</p><br/>
+    <p class="heading">Totals</p>
+    <div class="table">
+        <div class="row header">
+            <div class="cell">
+            </div>
+            <div class="cell">
+                {user1}
+            </div>
+            <div class="cell">
+                {user2}
+            </div>
+            <div class="cell">
+                Overall
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Messages Sent
+            </div>
+            <div class="cell">
+                {n_msgs_u1}
+            </div>
+            <div class="cell">
+                {n_msgs_u2}
+            </div>
+            <div class="cell">
+                {n_msgs_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Words Used
+            </div>
+            <div class="cell">
+                {n_words_u1}
+            </div>
+            <div class="cell">
+                {n_words_u2}
+            </div>
+            <div class="cell">
+                {n_words_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Unique words used
+            </div>
+            <div class="cell">
+                {n_unique_words_u1}
+            </div>
+            <div class="cell">
+                {n_unique_words_u2}
+            </div>
+            <div class="cell">
+                {n_unique_words_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Links Shared
+            </div>
+            <div class="cell">
+                {n_links_u1}
+            </div>
+            <div class="cell">
+                {n_links_u2}
+            </div>
+            <div class="cell">
+                {n_links_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Emojis Sent
+            </div>
+            <div class="cell">
+                {n_emojis_u1}
+            </div>
+            <div class="cell">
+                {n_emojis_u2}
+            </div>
+            <div class="cell">
+                {n_emojis_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Screen Touches
+            </div>
+            <div class="cell">
+                {n_touches_u1}
+            </div>
+            <div class="cell">
+                {n_touches_u2}
+            </div>
+            <div class="cell">
+                {n_touches_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Days Texted (and %)
+            </div>
+            <div class="cell">
+                {n_days_texted_u1}
+            </div>
+            <div class="cell">
+                {n_days_texted_u2}
+            </div>
+            <div class="cell">
+                {n_days_texted_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Most Used Word
+            </div>
+            <div class="cell">
+                {word_u1}
+            </div>
+            <div class="cell">
+                {word_u2}
+            </div>
+            <div class="cell">
+                {word_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Most Used Double Word
+            </div>
+            <div class="cell">
+                {double_word_u1}
+            </div>
+            <div class="cell">
+                {double_word_u2}
+            </div>
+            <div class="cell">
+                {double_word_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Most Used Triple Word
+            </div>
+            <div class="cell">
+                {triple_word_u1}
+            </div>
+            <div class="cell">
+                {triple_word_u2}
+            </div>
+            <div class="cell">
+                {triple_word_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Most Used Emoji
+            </div>
+            <div class="cell">
+                {emoji_u1}
+            </div>
+            <div class="cell">
+                {emoji_u2}
+            </div>
+            <div class="cell">
+                {emoji_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                First Message Date
+            </div>
+            <div class="cell">
+                {first_msg_date_u1}
+            </div>
+            <div class="cell">
+                {first_msg_date_u2}
+            </div>
+            <div class="cell">
+                {first_msg_date_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Recent Message Date
+            </div>
+            <div class="cell">
+                {recent_msg_date_u1}
+            </div>
+            <div class="cell">
+                {recent_msg_date_u2}
+            </div>
+            <div class="cell">
+                {recent_msg_date_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Most Active Date
+            </div>
+            <div class="cell">
+                {most_active_date_u1}
+            </div>
+            <div class="cell">
+                {most_active_date_u2}
+            </div>
+            <div class="cell">
+                {most_active_date_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Least Active Date
+            </div>
+            <div class="cell">
+                {least_active_date_u1}
+            </div>
+            <div class="cell">
+                {least_active_date_u2}
+            </div>
+            <div class="cell">
+                {least_active_date_overall}
+            </div>
+        </div>
+    </div>
+
+    <p class="heading green">Averages</p>
+    <div class="table">
+        <div class="row header green">
+            <div class="cell">
+            </div>
+            <div class="cell">
+                {user1}
+            </div>
+            <div class="cell">
+                {user2}
+            </div>
+            <div class="cell">
+                Overall
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Avg. Message/day
+            </div>
+            <div class="cell">
+                {avg_msgs_u1}
+            </div>
+            <div class="cell">
+                {avg_msgs_u2}
+            </div>
+            <div class="cell">
+                {avg_msgs_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Avg. Emojis/day
+            </div>
+            <div class="cell">
+                {avg_emojis_u1}
+            </div>
+            <div class="cell">
+                {avg_emojis_u2}
+            </div>
+            <div class="cell">
+                {avg_emojis_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Avg. Links/day
+            </div>
+            <div class="cell">
+                {avg_links_u1}
+            </div>
+            <div class="cell">
+                {avg_links_u2}
+            </div>
+            <div class="cell">
+                {avg_links_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Avg. Words/Message
+            </div>
+            <div class="cell">
+                {avg_words_u1}
+            </div>
+            <div class="cell">
+                {avg_words_u2}
+            </div>
+            <div class="cell">
+                {avg_words_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Avg. Letters/Message
+            </div>
+            <div class="cell">
+                {avg_letters_u1}
+            </div>
+            <div class="cell">
+                {avg_letters_u2}
+            </div>
+            <div class="cell">
+                {avg_letters_overall}
+            </div>
+        </div>
+    </div>
+
+    <p class="heading violet">Response Time</p>
+    <div class="table">
+        <div class="row header violet">
+            <div class="cell">
+            </div>
+            <div class="cell">
+                {user1}
+            </div>
+            <div class="cell">
+                {user2}
+            </div>
+            <div class="cell">
+                Overall
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                Avg. Response time (in minutes)
+            </div>
+            <div class="cell">
+                {avg_response_u1}
+            </div>
+            <div class="cell">
+                {avg_response_u2}
+            </div>
+            <div class="cell">
+                {avg_response_overall}
+            </div>
+        </div>
+    </div>
+
+    <p class="heading blue">Tops</p>
+    <div class="table">
+        <div class="row header blue">
+            <div class="cell">
+            </div>
+            <div class="cell">
+            </div>
+            <div class="cell">
+                {user1}
+            </div>
+            <div class="cell">
+                {user2}
+            </div>
+            <div class="cell">
+                Overall
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <b><span style="color:#2980b9;">Active Day</span></b>
+            </div>
+            <div class="cell">
+                Date
+            </div>
+            <div class="cell">
+                {active_date_u1}
+            </div>
+            <div class="cell">
+                {active_date_u2}
+            </div>
+            <div class="cell">
+                {active_date_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+            </div>
+            <div class="cell">
+                Messages
+            </div>
+            <div class="cell">
+                {active_date_msgs_u1}
+            </div>
+            <div class="cell">
+                {active_date_msgs_u2}
+            </div>
+            <div class="cell">
+                {active_date_msgs_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+            </div>
+            <div class="cell">
+                Words
+            </div>
+            <div class="cell">
+                {active_date_words_u1}
+            </div>
+            <div class="cell">
+                {active_date_words_u2}
+            </div>
+            <div class="cell">
+                {active_date_words_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+            </div>
+            <div class="cell">
+                Duration (in minutes)
+            </div>
+            <div class="cell">
+                {active_date_duration_u1}
+            </div>
+            <div class="cell">
+                {active_date_duration_u2}
+            </div>
+            <div class="cell">
+                {active_date_duration_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+            </div>
+            <div class="cell">
+                Emojis
+            </div>
+            <div class="cell">
+                {active_date_emojis_u1}
+            </div>
+            <div class="cell">
+                {active_date_emojis_u2}
+            </div>
+            <div class="cell">
+                {active_date_emojis_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <b><span style="color:#2980b9;">Longest Conversation</span></b>
+            </div>
+            <div class="cell">
+                Date
+            </div>
+            <div class="cell">
+                {lc_date_u1}
+            </div>
+            <div class="cell">
+                {lc_date_u2}
+            </div>
+            <div class="cell">
+                {lc_date_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+            </div>
+            <div class="cell">
+                Messages
+            </div>
+            <div class="cell">
+                {lc_date_msgs_u1}
+            </div>
+            <div class="cell">
+                {lc_date_msgs_u2}
+            </div>
+            <div class="cell">
+                {lc_date_msgs_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+            </div>
+            <div class="cell">
+                Words
+            </div>
+            <div class="cell">
+                {lc_date_words_u1}
+            </div>
+            <div class="cell">
+                {lc_date_words_u2}
+            </div>
+            <div class="cell">
+                {lc_date_words_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+            </div>
+            <div class="cell">
+                Duration (in minutes)
+            </div>
+            <div class="cell">
+                {lc_date_duration_u1}
+            </div>
+            <div class="cell">
+                {lc_date_duration_u2}
+            </div>
+            <div class="cell">
+                {lc_date_duration_overall}
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+            </div>
+            <div class="cell">
+                Emojis
+            </div>
+            <div class="cell">
+                {lc_date_emojis_u1}
+            </div>
+            <div class="cell">
+                {lc_date_emojis_u2}
+            </div>
+            <div class="cell">
+                {lc_date_emojis_overall}
+            </div>
+        </div>
+    </div>
+
+    <hr>
+    <!--Plots shown here-->
+    <!-- ------------------------------------------------------------- !-->
+    <p style="font-size:35px; font-weight:bold;">Plots</p><br/>
+    <p class="heading yellow">Most Used Emojis</p>
+    <div class="table">
+        <div class="row header yellow">
+            <div class="cell">
+                <center>{user1}</center>
+            </div>
+            <div class="cell">
+                <center>{user2}</center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    {emoji1_u1}
+                </center>
+            </div>
+            <div class="cell">
+                <center>
+                    {emoji1_u2}
+                </center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    {emoji2_u1}
+                </center>
+            </div>
+            <div class="cell">
+                <center>
+                    {emoji2_u2}
+                </center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    {emoji3_u1}
+                </center>
+            </div>
+            <div class="cell">
+                <center>
+                    {emoji3_u2}
+                </center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    {emoji4_u1}
+                </center>
+            </div>
+            <div class="cell">
+                <center>
+                    {emoji4_u2}
+                </center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    {emoji5_u1}
+                </center>
+            </div>
+            <div class="cell">
+                <center>
+                    {emoji5_u2}
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading">Word Cloud</p>
+    <div class="table">
+        <div class="row header">
+            <div class="cell">
+                <center>Single Word</center>
+            </div>
+        </div>
+        <div class="row header black">
+            <div class="cell">
+                <center>{user1}</center>
+            </div>
+            <div class="cell">
+                <center>{user2}</center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{word_cloud_1words_u1}"
+                            height="500"
+                            width="300"
+                    >
+                </center>
+            </div>
+            <div class="cell">
+                <center>
+                    <img
+                            src="{word_cloud_1words_u2}"
+                            height="500"
+                            width="300"
+                    >
+                </center>
+            </div>
+        </div>
+        <div class="row header">
+            <div class="cell">
+                <center>Double Word</center>
+            </div>
+        </div>
+        <div class="row header black">
+            <div class="cell">
+                <center>{user1}</center>
+            </div>
+            <div class="cell">
+                <center>{user2}</center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{word_cloud_2words_u1}"
+                            height="500"
+                            width="300"
+                    >
+                </center>
+            </div>
+            <div class="cell">
+                <center>
+                    <img
+                            src="{word_cloud_2words_u2}"
+                            height="500"
+                            width="300"
+                    >
+                </center>
+            </div>
+        </div>
+        <div class="row header">
+            <div class="cell">
+                <center>Triple Word</center>
+            </div>
+        </div>
+        <div class="row header black">
+            <div class="cell">
+                <center>{user1}</center>
+            </div>
+            <div class="cell">
+                <center>{user2}</center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{word_cloud_3words_u1}"
+                            height="500"
+                            width="300"
+                    >
+                </center>
+            </div>
+            <div class="cell">
+                <center>
+                    <img
+                            src="{word_cloud_3words_u2}"
+                            height="500"
+                            width="300"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading green">Messages sent over time</p>
+    <div class="table">
+        <div class="row header green">
+            <div class="cell">
+                <center>Timeline of texting by both the users.</center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{date_n_msgs}"
+                            height="350"
+                            width="700"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading violet">Emojis sent over time</p>
+    <div class="table">
+        <div class="row header blue">
+            <div class="cell">
+                <center>Timeline of emotions shown by both the users.</center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{date_n_emojis}"
+                            height="350"
+                            width="700"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading blue">Weekly Pattern</p>
+    <div class="table">
+        <div class="row header green">
+            <div class="cell">
+                <center>Do the users text only on weekends?</center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{weekly_pattern}"
+                            height="350"
+                            width="700"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading">Hourly Pattern</p>
+    <div class="table">
+        <div class="row header">
+            <div class="cell">
+                <center>Do the users text only in non-office hours?</center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{hourly_pattern}"
+                            height="350"
+                            width="700"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading green">Messages Pattern (Monthly)</p>
+    <div class="table">
+        <div class="row header green">
+            <div class="cell">
+                <center>Monthly trend in Texting</center>
+                <span style="font-size:10px;"><center>(Note: Will be useful to know if the interest is increasing/decreasing over time)</center></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{monthly_msg_pattern}"
+                            height="350"
+                            width="700"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading violet">Words in Messages Pattern (Monthly)</p>
+    <div class="table">
+        <div class="row header violet">
+            <div class="cell">
+                <center>Monthly trend in number of words typed in messages</center>
+                <span style="font-size:10px;"><center>(Note: Will be useful to know if the interest is increasing/decreasing over time)</center></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{monthly_word_pattern}"
+                            height="350"
+                            width="700"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading blue">Emojis in Messages Pattern (Monthly)</p>
+    <div class="table">
+        <div class="row header blue">
+            <div class="cell">
+                <center>Monthly trend in Emoting</center>
+                <span style="font-size:10px;"><center>(Note: Will be useful to know if the interest is increasing/decreasing over time)</center></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{monthly_emoji_pattern}"
+                            height="350"
+                            width="700"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading">Response time Pattern (Monthly)</p>
+    <div class="table">
+        <div class="row header">
+            <div class="cell">
+                <center>Monthly trend in Response</center>
+                <span style="font-size:10px;"><center>(Note: Will be useful to know if the interest is increasing/decreasing over time)</center></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{monthly_response_pattern}"
+                            height="350"
+                            width="700"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading green">Domain Counts for the Links</p>
+    <div class="table">
+        <div class="row header green">
+            <div class="cell">
+                <center>Domains of the links shared across the chat by both the users.</center>
+                <span style="font-size:10px;"><center>(Note: Will be useful to know which platform they use and share the most)</center></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{domain_counts}"
+                            height="350"
+                            width="700"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- partial -->
+</body>
+<!-- Footer -->
+<footer class="page-footer font-small blue">
+
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">
+        © <b>2020 Copyright:</b><a href="https://github.com/kartheekpnsn/chat-explore/"> Kartheek Palepu</a><br/>
+        <b>Inspired Author Citation:</b><a href="https://i.redd.it/rdslcczibsb21.png"> this</a><br/>
+        <b>HTML Template from:</b><a href="https://codepen.io/lukepeters/pen/bfFur"> here</a>
+    </div>
+    <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
+</html>
