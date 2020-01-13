@@ -43,10 +43,12 @@ python run.py -f "C:\Users\Testuser\Desktop\WhatsApp Chat with Kartheek.txt"
 
 ### 6. Sample Output
 
-Sample 1:
+**Sample 1**:
+
 ![Sample 1 Text](https://raw.githubusercontent.com/kartheekpnsn/chat-explore/master/samples/ss1.PNG "Output Sample 1")
 
-Sample 2:
+**Sample 2**:
+
 ![Sample 2 Text](https://raw.githubusercontent.com/kartheekpnsn/chat-explore/master/samples/ss2.PNG "Output Sample 2")
 
 ### 7. Contributors
