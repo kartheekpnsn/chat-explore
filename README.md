@@ -40,3 +40,15 @@ python run.py -f <file_path>
 ```shell
 python run.py "C:\Users\Testuser\Desktop\WhatsApp Chat with Kartheek.txt"
 ```
+
+### 6. Contributors
+
+- Kartheek Palepu <https://www.github.com/kartheekpnsn>
+
+### 7. Idea Credits
+
+**Acknowledgement:**
+
+- This entire idea is inspired from a reddit post (links posted below):
+- Link: <https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/>
+- Author Citation: <https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/eem8gke/>
