@@ -2,7 +2,7 @@
 
 This is a script that generates an infographic that has statistics and plots between any two users whatsapp chat export.
 
-- **Limitation**: Currently only works with two users chat, Group chats doesn't work.
+- **Limitation**: Currently only works with **two** users chat, **Group chats** doesn't work.
 
 ## Getting Started
 
@@ -38,17 +38,17 @@ python run.py -f <file_path>
 
 #### Example:
 ```shell
-python run.py "C:\Users\Testuser\Desktop\WhatsApp Chat with Kartheek.txt"
+python run.py -f "C:\Users\Testuser\Desktop\WhatsApp Chat with Kartheek.txt"
 ```
 
 ### 6. Contributors
 
-- Kartheek Palepu <https://www.github.com/kartheekpnsn>
+- [@Kartheek Palepu](https://www.github.com/kartheekpnsn)
 
 ### 7. Idea Credits
 
 **Acknowledgement:**
 
 - This entire idea is inspired from a reddit post (links posted below):
-- Link: <https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/>
-- Author Citation: <https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/eem8gke/>
+    - Link to the [post:](https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/)
+    - [Author Citation:](https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/eem8gke/)
