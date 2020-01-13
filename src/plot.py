@@ -156,11 +156,12 @@ class Plot:
         palette = [self.color_map[v] for v in hue_order]
         plt.figure(figsize = (15, 7))
         plt.grid(True)
-        g = sns.barplot(x = 'Domain', y = 'Count',
-                        hue = 'User', hue_order = hue_order,
-                        palette = palette,
-                        data = domain_counts)
-        g.set_xticklabels(g.get_xticklabels(), rotation = 90)
-        g.set_ylabel('Count', size = 12, fontdict = {'fontweight': 'bold'})
-        g.set_xlabel(f"Domain of the link shared", size = 12, fontdict = {'fontweight': 'bold'})
+        if domain_counts.shape[0] > 0:
+            g = sns.barplot(x = 'Domain', y = 'Count',
+                            hue = 'User', hue_order = hue_order,
+                            palette = palette,
+                            data = domain_counts)
+            g.set_xticklabels(g.get_xticklabels(), rotation = 90)
+            g.set_ylabel('Count', size = 12, fontdict = {'fontweight': 'bold'})
+            g.set_xlabel(f"Domain of the link shared", size = 12, fontdict = {'fontweight': 'bold'})
         plt.savefig(f"{self.save_path}/domain_counts.png", dpi = 300, bbox_inches = 'tight',pad_inches = 0)

@@ -82,6 +82,16 @@ class HTMLStats:
         self.user2 = user2
         self.overall = overall
         self.logger = logger
+        self.emoji1_u1 = ""
+        self.emoji1_u2 = ""
+        self.emoji2_u1 = ""
+        self.emoji2_u2 = ""
+        self.emoji3_u1 = ""
+        self.emoji3_u2 = ""
+        self.emoji4_u1 = ""
+        self.emoji4_u2 = ""
+        self.emoji5_u1 = ""
+        self.emoji5_u2 = ""
 
     def populate_names(self):
         """
@@ -273,16 +283,17 @@ class HTMLStats:
         :return:
         """
         self.logger.write_logger("In generate_html.py (HTMLStats/populate_emoji_ranks): Populating Emoji ranks")
-        self.emoji1_u1 = self.user1.pd_emoji_rank['Emoji'].tolist()[0]
-        self.emoji1_u2 = self.user2.pd_emoji_rank['Emoji'].tolist()[0]
-        self.emoji2_u1 = self.user1.pd_emoji_rank['Emoji'].tolist()[1]
-        self.emoji2_u2 = self.user2.pd_emoji_rank['Emoji'].tolist()[1]
-        self.emoji3_u1 = self.user1.pd_emoji_rank['Emoji'].tolist()[2]
-        self.emoji3_u2 = self.user2.pd_emoji_rank['Emoji'].tolist()[2]
-        self.emoji4_u1 = self.user1.pd_emoji_rank['Emoji'].tolist()[3]
-        self.emoji4_u2 = self.user2.pd_emoji_rank['Emoji'].tolist()[3]
-        self.emoji5_u1 = self.user1.pd_emoji_rank['Emoji'].tolist()[4]
-        self.emoji5_u2 = self.user2.pd_emoji_rank['Emoji'].tolist()[4]
+        if self.user1.pd_emoji_rank.shape[0] == 5 and self.user2.pd_emoji_rank.shape[0] == 5:
+            self.emoji1_u1 = self.user1.pd_emoji_rank['Emoji'].tolist()[0]
+            self.emoji1_u2 = self.user2.pd_emoji_rank['Emoji'].tolist()[0]
+            self.emoji2_u1 = self.user1.pd_emoji_rank['Emoji'].tolist()[1]
+            self.emoji2_u2 = self.user2.pd_emoji_rank['Emoji'].tolist()[1]
+            self.emoji3_u1 = self.user1.pd_emoji_rank['Emoji'].tolist()[2]
+            self.emoji3_u2 = self.user2.pd_emoji_rank['Emoji'].tolist()[2]
+            self.emoji4_u1 = self.user1.pd_emoji_rank['Emoji'].tolist()[3]
+            self.emoji4_u2 = self.user2.pd_emoji_rank['Emoji'].tolist()[3]
+            self.emoji5_u1 = self.user1.pd_emoji_rank['Emoji'].tolist()[4]
+            self.emoji5_u2 = self.user2.pd_emoji_rank['Emoji'].tolist()[4]
         return self
 
 
