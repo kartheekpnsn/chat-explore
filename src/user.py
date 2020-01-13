@@ -499,6 +499,24 @@ class User:
         return [word2 if word == word1 else word for word in words]
 
     @staticmethod
+    def prepare_month_df(min_year, max_year):
+        """
+
+        :param min_year:
+        :param max_year:
+        :return:
+        """
+        months = []
+        for year in range(min_year, (max_year + 1)):
+            for month in range(1, 13):
+                if month < 10:
+                    month = f"0{month}"
+                else:
+                    month = f"{month}"
+                months.append(f"({year}) {month}")
+        return pd.DataFrame({'Month': months})
+
+    @staticmethod
     def lemmatize_and_stem(words, lemmatize_flag = True):
         """
 

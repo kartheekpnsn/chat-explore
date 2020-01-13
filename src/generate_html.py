@@ -514,6 +514,7 @@ class HTML:
         :return:
         """
         current_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-        with open(f'chat_explore_{current_time}.html', 'wb') as f:
+        self.file_name = f"chat_explore_{current_time}.html"
+        with open(f'{self.file_name}', 'wb') as f:
             f.write(self.html_txt.encode('utf-8'))
         return self

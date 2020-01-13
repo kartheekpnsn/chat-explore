@@ -8,7 +8,7 @@ class DeleteFiles:
 
         :param path_list:
         """
-        self.path_list = []
+        self.path_list = path_list
 
     def delete(self):
         """
@@ -17,4 +17,7 @@ class DeleteFiles:
         """
         for path in self.path_list:
             if os.path.exists(path):
-                shutil.rmtree(path)
+                try:
+                    shutil.rmtree(path)
+                except Exception as e:
+                    print(f"DeletionError: {str(e)}")
