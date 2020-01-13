@@ -60,5 +60,5 @@ python run.py -f "C:\Users\Testuser\Desktop\WhatsApp Chat with Kartheek.txt"
 **Acknowledgement:**
 
 - This entire idea is inspired from a reddit post (links posted below):
-    - Link to the [post:](https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/)
-    - [Author Citation:](https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/eem8gke/)
+    - Link to the [post](https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/)
+    - [Author Citation](https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/eem8gke/)
