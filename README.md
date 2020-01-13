@@ -1,7 +1,8 @@
 # Chat Explore
 
 This is a script that generates an infographic that has statistics and plots between any two users whatsapp chat export.
-**Limitation**: Currently only works with two users chat, Group chats doesn't work.
+
+- **Limitation**: Currently only works with two users chat, Group chats doesn't work.
 
 ## Getting Started
 
