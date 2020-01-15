@@ -33,6 +33,7 @@ pip install -r requirements.txt
 
 - Go to: https://www.lfd.uci.edu/~gohlke/pythonlibs/#wordcloud
 - Click on the matching whl file to download.
+    - **Naming**: wordcloud-**[version]**-cp **[python-version]**-cp **[python-version]**-win **[32bit-or-64bit]**.whl
 - Then below command in command prompt
 
 ```shell
