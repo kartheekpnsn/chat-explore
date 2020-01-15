@@ -28,6 +28,24 @@ In a [command prompt or Terminal window](https://tutorial.djangogirls.org/en/int
 pip install -r requirements.txt
 ```
 
+#### wordcloud installation problem
+**Note**: If you are facing issues installing `wordcloud` on Windows10. The follow the below procedure.
+
+- Go to: https://www.lfd.uci.edu/~gohlke/pythonlibs/#wordcloud
+- Click on the matching whl file to download.
+- Then below command in command prompt
+
+```shell
+pip install <location_of_wordcloud_whl_file>
+```
+
+**Example:**
+
+```shell
+pip install "C:\Users\Testuser\Desktop\wordcloud-1.6.0-cp38-cp38-win32.whl"
+```
+
+
 ### 5. Run the Script
 
 In the same command prompt or Terminal window, type the following, and press enter:
