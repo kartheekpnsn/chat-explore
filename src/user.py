@@ -274,6 +274,8 @@ class User:
         """
         if "deleted this message" in text.strip():
             return ""
+        elif "message deleted" in text.strip():
+            return ""
         else:
             return text
 
