@@ -9,6 +9,7 @@ import nltk
 
 # this resolves SSL certificate issues for a MAC user
 import ssl
+# disable SSL check
 try:
     _create_unverified_https_context = ssl._create_unverified_context
 except AttributeError:
