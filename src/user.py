@@ -928,6 +928,7 @@ class User:
         _tmp = self.data.copy()
         _tmp = _tmp.sort_values(['TimeStamp'])
         _tmp['Date'] = _tmp['TimeStamp'].dt.strftime('%d-%b-%Y')
+        _tmp['Hour'] = _tmp['TimeStamp'].dt.hour
         # Used to filter texting after waking up rather than during the mid night conversation
         _tmp = _tmp[_tmp.Hour > 6]
         grp_tmp = _tmp.groupby(['Date'])['User'].first().reset_index()
