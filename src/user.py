@@ -9,6 +9,7 @@ import nltk
 
 # this resolves SSL certificate issues for a MAC user
 import ssl
+
 # disable SSL check
 try:
     _create_unverified_https_context = ssl._create_unverified_context
@@ -16,7 +17,6 @@ except AttributeError:
     pass
 else:
     ssl._create_default_https_context = _create_unverified_https_context
-
 
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -918,3 +918,22 @@ class User:
         userwise_monthly_response_time.loc[userwise_monthly_response_time['Response (Min)'] > 60, 'Response (Min)'] = -1
         userwise_monthly_response_time.sort_values(['User', 'Month'], inplace = True)
         return userwise_monthly_response_time
+
+    def get_first_text_monthly_count(self):
+        """
+
+        :param data:
+        :return:
+        """
+        _tmp = self.data.copy()
+        _tmp = _tmp.sort_values(['TimeStamp'])
+        _tmp['Date'] = _tmp['TimeStamp'].dt.strftime('%d-%b-%Y')
+        # Used to filter texting after waking up rather than during the mid night conversation
+        _tmp = _tmp[_tmp.Hour > 6]
+        grp_tmp = _tmp.groupby(['Date'])['User'].first().reset_index()
+        grp_tmp['TimeStamp'] = pd.to_datetime(grp_tmp['Date'], format = '%d-%b-%Y')
+        grp_tmp = grp_tmp.sort_values(['TimeStamp'])
+        grp_tmp['Month'] = grp_tmp['TimeStamp'].dt.strftime('(%Y) %m')
+        pd_monthly_first_text_counts = grp_tmp.groupby(['Month', 'User'])['Date'].count().reset_index()
+        pd_monthly_first_text_counts.sort_values(['User', 'Month'], inplace = True)
+        return pd_monthly_first_text_counts

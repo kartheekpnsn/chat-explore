@@ -71,6 +71,7 @@ class HTMLImages:
         self.monthly_emoji_pattern = HTMLImages.encode_decode_img(f"{self.save_path}/monthly_emoji_progression.png")
         self.monthly_response_pattern = HTMLImages.encode_decode_img(
             f"{self.save_path}/monthly_response_time_progression.png")
+        self.monthly_first_text_ct = HTMLImages.encode_decode_img(f"{self.save_path}/monthly_first_text_ct.png")
         self.domain_counts = HTMLImages.encode_decode_img(f"{self.save_path}/domain_counts.png")
         return self
 
@@ -516,6 +517,7 @@ class HTML:
         self.html_txt = self.html_txt.replace("{monthly_emoji_pattern}", f"{self.html_images.monthly_emoji_pattern}")
         self.html_txt = self.html_txt.replace("{monthly_response_pattern}",
                                               f"{self.html_images.monthly_response_pattern}")
+        self.html_txt = self.html_txt.replace("{monthly_first_text_ct}", f"{self.html_images.monthly_first_text_ct}")
         self.html_txt = self.html_txt.replace("{domain_counts}", f"{self.html_images.domain_counts}")
         return self
 
