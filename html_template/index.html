@@ -168,12 +168,14 @@
                 display: block;
             }
         }
+
     </style>
 </head>
 <body>
 <!-- partial:index.partial.html -->
 <div class="wrapper">
-    <center><p style="font-size:30px; font-weight:bold; color:#24709c;">{title}</p></center><br/>
+    <center><p style="font-size:30px; font-weight:bold; color:#24709c;">{title}</p></center>
+    <br/>
     <center><p style="font-size:20px; font-weight:bold; color:#752cdb;">{sup_title}</p></center>
     <br/><br/>
     <!--Statistics shown here-->
@@ -1048,9 +1050,30 @@
         </div>
     </div>
 
-    <p class="heading green">Domain Counts for the Links</p>
+    <p class="heading green">Who texts first (Monthly)</p>
     <div class="table">
         <div class="row header green">
+            <div class="cell">
+                <center>Trend in texting first over time</center>
+                <span style="font-size:10px;"><center>(Note: Will be useful to know which platform they use and share the most)</center></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{monthly_first_text_ct}"
+                            height="350"
+                            width="700"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading blue">Domain Counts for the Links</p>
+    <div class="table">
+        <div class="row header blue">
             <div class="cell">
                 <center>Domains of the links shared across the chat by both the users.</center>
                 <span style="font-size:10px;"><center>(Note: Will be useful to know which platform they use and share the most)</center></span>
@@ -1068,6 +1091,7 @@
             </div>
         </div>
     </div>
+
 </div>
 <!-- partial -->
 </body>

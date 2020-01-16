@@ -157,6 +157,39 @@ class PlotProgression:
         plt.savefig(f"{self.save_path}/monthly_response_time_progression.png", dpi = 300, bbox_inches = 'tight',
                     pad_inches = 0)
 
+    def plot_first_text_progression(self, user_object):
+        """
+
+        :param user_object:
+        :return:
+        """
+        y = 'No. of times user texted first'
+        monthly_first_text_ct = user_object.get_first_text_monthly_count()
+        monthly_first_text_ct.rename(columns = {'Date': y}, inplace = True)
+        fig = plt.figure(figsize = (15, 7))
+        plt.grid(True)
+        ax = fig.add_subplot(111)
+        g = None
+        for each_user in np.unique(monthly_first_text_ct['User']):
+            subset_plot_data = monthly_first_text_ct[monthly_first_text_ct['User'] == each_user]
+            subset_plot_data = subset_plot_data.sort_values(['Month'], ascending = True)
+            subset_plot_data = self.month_df.merge(subset_plot_data, on = 'Month', how = 'left')
+            subset_plot_data['User'] = subset_plot_data['User'].fillna(each_user)
+            subset_plot_data[y] = subset_plot_data[y].fillna(0)
+            if self.cumulative:
+                subset_plot_data[y] = subset_plot_data[y].cumsum()
+            g = sns.lineplot(x = 'Month', y = y,
+                             data = subset_plot_data, color = self.color_map[each_user],
+                             label = each_user,
+                             sort = False, ax = ax)
+        if g is not None:
+            # g.set_title(f"Trend in Avg. Emojis sent per msg", size = 20, fontdict = {'fontweight': 'bold'})
+            g.set_xlabel('(Year) Month', size = 12, fontdict = {'fontweight': 'bold'})
+            g.set_ylabel(f"{y}", size = 12, fontdict = {'fontweight': 'bold'})
+        ax.legend()
+        plt.xticks(rotation = 90)
+        plt.savefig(f"{self.save_path}/monthly_first_text_ct.png", dpi = 300, bbox_inches = 'tight', pad_inches = 0)
+
     def plot_monthly_emoji_progression(self, user_object):
         """
 

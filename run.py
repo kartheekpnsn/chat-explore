@@ -138,6 +138,7 @@ def plot_progression(preprocess, user_data_list):
     plot_progression_obj.plot_monthly_msg_progression()
     plot_progression_obj.plot_monthly_word_progression(user_object = user_data_list[-1])
     plot_progression_obj.plot_monthly_emoji_progression(user_object = user_data_list[-1])
+    plot_progression_obj.plot_first_text_progression(user_object = user_data_list[-1])
     plot_progression_obj.plot_monthly_response_time_progression(user_object = user_data_list[-1])
 
 
