@@ -5,13 +5,6 @@ This is a script that generates an infographic that has statistics and plots bet
 - **Limitation 1**: Currently only works with **two** users chat, **Group chats** doesn't work.
 - **Limitation 2**: Currently only works for Android exports. **iOS** not supported.
 
-## Update Patch
-
-- Added First to text feature in the plots
-- TODO: Sentiment over period of time, Usual Sentiment through out the 24 hours
-    - Can help in understanding if people are showing positive emotions in the morning and negative in the evenings.
-- TODO: Parser for iOS exports.
-
 ## Getting Started
 
 ### 1. Install Python 3+
@@ -78,12 +71,20 @@ python run.py -f "C:\Users\Testuser\Desktop\WhatsApp Chat with Kartheek.txt"
 
 ![Sample 2 Text](https://raw.githubusercontent.com/kartheekpnsn/chat-explore/master/samples/ss2.PNG "Output Sample 2")
 
-### 7. Contributors
+### 7. Update Patch
+
+- `16 Jan 2019` Added First to text feature in the plots
+- TODO: Sentiment over period of time, Usual Sentiment through out the 24 hours
+    - Can help in understanding if people are showing positive emotions in the morning and negative in the evenings.
+- TODO: Parser for iOS exports.
+
+
+### 8. Contributors
 
 - [@Kartheek Palepu](https://www.github.com/kartheekpnsn)
 - [@Yashwanth Kuruganti](https://github.com/yashkuru)
 
-### 8. Idea Credits
+### 9. Idea Credits
 
 **Acknowledgement:**
 
