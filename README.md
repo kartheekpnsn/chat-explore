@@ -2,7 +2,15 @@
 
 This is a script that generates an infographic that has statistics and plots between any two users whatsapp chat export.
 
-- **Limitation**: Currently only works with **two** users chat, **Group chats** doesn't work.
+- **Limitation 1**: Currently only works with **two** users chat, **Group chats** doesn't work.
+- **Limitation 2**: Currently only works for Android exports. **iOS** not supported.
+
+## Update Patch
+
+- Added First to text feature in the plots
+- TODO: Sentiment over period of time, Usual Sentiment through out the 24 hours
+    - Can help in understanding if people are showing positive emotions in the morning and negative in the evenings.
+- TODO: Parser for iOS exports.
 
 ## Getting Started
 
