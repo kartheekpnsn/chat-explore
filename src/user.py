@@ -7,7 +7,18 @@ import pandas as pd
 import tldextract
 import nltk
 
+# this resolves SSL certificate issues for a MAC user
+import ssl
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
+
+
 nltk.download('stopwords')
+nltk.download('wordnet')
 
 # from nltk.corpus import stopwords # Removed it to fit requirements better
 from nltk.stem import PorterStemmer
