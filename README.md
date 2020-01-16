@@ -73,7 +73,7 @@ python run.py -f "C:\Users\Testuser\Desktop\WhatsApp Chat with Kartheek.txt"
 ### 7. Contributors
 
 - [@Kartheek Palepu](https://www.github.com/kartheekpnsn)
-- [@Yashwanth Kuruganti] (https://github.com/yashkuru)
+- [@Yashwanth Kuruganti](https://github.com/yashkuru)
 
 ### 8. Idea Credits
 
