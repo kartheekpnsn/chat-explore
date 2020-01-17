@@ -30,6 +30,7 @@ from scipy import stats
 
 from action_logging import Logger
 from response import Response
+from sentiment_analysis import Sentiment
 
 warnings.filterwarnings('ignore')
 
@@ -143,6 +144,9 @@ class User:
             'N Words'       : 0,
             'N Emojis'      : 0
         }  # more messages
+
+        self.top_k_positive_str = ""
+        self.top_k_negative_str = ""
 
     def _init_plot_members(self):
         """
@@ -325,6 +329,40 @@ class User:
         self.logger.write_logger('In user.py (remove_links): Removing links ends')
         self.data['Clean Message'] = self.data['Clean Message'].apply(lambda x: x.lower())
         self.logger.write_logger('In user.py (get_clean_messages): Cleaning of messages ends')
+        return self
+
+    def get_message_sentiment(self):
+        """
+
+        :return:
+        """
+        self.logger.write_logger('In user.py (get_message_sentiment): Fetching the Sentiment of messages starts')
+        self.data['Polarity Score'] = self.data['Clean Message'].apply(lambda x: Sentiment.vader(x))
+        self.logger.write_logger('In user.py (get_message_sentiment): Fetching the Sentiment of messages ends')
+        return self
+
+    def get_top_sentiments(self, k = 2):
+        """
+
+        :param k:
+        :return:
+        """
+        self.logger.write_logger(f'In user.py (get_top_sentiments): Fetching Top {k} Sentiments starts')
+        top_k_positive = self.data[self.data['Polarity Score'] > 0]
+        top_k_positive.sort_values('Polarity Score', ascending = False, inplace = True)
+        if top_k_positive.shape[0] >= k:
+            self.top_k_positive_str = "<br/><br/>".join(top_k_positive['Clean Message'].tolist()[:k])
+        else:
+            self.top_k_positive_str = ""
+
+        top_k_negative = self.data[self.data['Polarity Score'] < 0]
+        top_k_negative.sort_values('Polarity Score', ascending = True, inplace = True)
+        if top_k_negative.shape[0] >= k:
+            self.top_k_negative_str = "<br/><br/>".join(top_k_negative['Clean Message'].tolist()[:k])
+        else:
+            self.top_k_negative_str = ""
+        self.data['Polarity Score'] = self.data['Clean Message'].apply(lambda x: Sentiment.vader(x))
+        self.logger.write_logger(f'In user.py (get_top_sentiments): Fetching Top {k} Sentiments ends')
         return self
 
     @staticmethod
@@ -938,3 +976,14 @@ class User:
         pd_monthly_first_text_counts = grp_tmp.groupby(['Month', 'User'])['Date'].count().reset_index()
         pd_monthly_first_text_counts.sort_values(['User', 'Month'], inplace = True)
         return pd_monthly_first_text_counts
+
+    def get_monthly_avg_polarity(self):
+        """
+
+        :return:
+        """
+        _tmp = self.data.copy()
+        _tmp['Month'] = _tmp['TimeStamp'].dt.strftime('(%Y) %m')
+        pd_monthly_avg_polarity = _tmp.groupby(['Month', 'User'])['Polarity Score'].mean().reset_index()
+        pd_monthly_avg_polarity.sort_values(['User', 'Month'], inplace = True)
+        return pd_monthly_avg_polarity

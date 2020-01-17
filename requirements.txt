@@ -7,3 +7,4 @@ seaborn
 wordcloud
 scikit-learn
 nltk
+twython

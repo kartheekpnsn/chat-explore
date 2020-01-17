@@ -84,6 +84,8 @@ def user_wise_analysis(preprocess, logger):
             users = user_subset_data['User'],
             logger = logger)
         user_data.get_clean_messages(). \
+            get_message_sentiment(). \
+            get_top_sentiments(k = 2). \
             get_link_count(). \
             get_media_count(). \
             get_emoji_count(). \
@@ -139,6 +141,7 @@ def plot_progression(preprocess, user_data_list):
     plot_progression_obj.plot_monthly_word_progression(user_object = user_data_list[-1])
     plot_progression_obj.plot_monthly_emoji_progression(user_object = user_data_list[-1])
     plot_progression_obj.plot_first_text_progression(user_object = user_data_list[-1])
+    plot_progression_obj.plot_sentiment_progression(user_object = user_data_list[-1])
     plot_progression_obj.plot_monthly_response_time_progression(user_object = user_data_list[-1])
 
 

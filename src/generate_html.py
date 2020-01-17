@@ -72,6 +72,7 @@ class HTMLImages:
         self.monthly_response_pattern = HTMLImages.encode_decode_img(
             f"{self.save_path}/monthly_response_time_progression.png")
         self.monthly_first_text_ct = HTMLImages.encode_decode_img(f"{self.save_path}/monthly_first_text_ct.png")
+        self.monthly_avg_polarity = HTMLImages.encode_decode_img(f"{self.save_path}/monthly_avg_polarity.png")
         self.domain_counts = HTMLImages.encode_decode_img(f"{self.save_path}/domain_counts.png")
         return self
 
@@ -93,6 +94,10 @@ class HTMLStats:
         self.emoji4_u2 = ""
         self.emoji5_u1 = ""
         self.emoji5_u2 = ""
+        self.top_k_positive_u1 = ""
+        self.top_k_positive_u2 = ""
+        self.top_k_negative_u1 = ""
+        self.top_k_negative_u2 = ""
 
     def populate_names(self):
         """
@@ -219,6 +224,22 @@ class HTMLStats:
         self.avg_letters_overall = self.overall.avg_letters_per_message
         return self
 
+    def populate_sentiments(self):
+        """
+
+        :return:
+        """
+        self.logger.write_logger("In generate_html.py (HTMLStats/populate_sentiments): Populating Sentiments starts")
+        self.top_k_positive_u1 = self.user1.top_k_positive_str
+        self.top_k_positive_u2 = self.user2.top_k_positive_str
+
+        self.top_k_negative_u1 = self.user1.top_k_negative_str
+        self.top_k_negative_u2 = self.user2.top_k_negative_str
+
+        self.logger.write_logger("In generate_html.py (HTMLStats/populate_sentiments): Populating Sentiments ends")
+        return self
+
+
     def populate_tops(self):
         """
 
@@ -336,6 +357,7 @@ class HTML:
             populate_title(). \
             populate_totals(). \
             populate_averages(). \
+            populate_sentiments(). \
             populate_tops(). \
             populate_response(). \
             populate_emoji_ranks()
@@ -483,6 +505,11 @@ class HTML:
         self.html_txt = self.html_txt.replace("{avg_response_u1}", f"{self.html_stats.avg_response_u1}")
         self.html_txt = self.html_txt.replace("{avg_response_u2}", f"{self.html_stats.avg_response_u2}")
         self.html_txt = self.html_txt.replace("{avg_response_overall}", f"{self.html_stats.avg_response_overall}")
+        # Top Sentiments
+        self.html_txt = self.html_txt.replace("{top_k_positive_u1}", f"{self.html_stats.top_k_positive_u1}")
+        self.html_txt = self.html_txt.replace("{top_k_positive_u2}", f"{self.html_stats.top_k_positive_u2}")
+        self.html_txt = self.html_txt.replace("{top_k_negative_u1}", f"{self.html_stats.top_k_negative_u1}")
+        self.html_txt = self.html_txt.replace("{top_k_negative_u2}", f"{self.html_stats.top_k_negative_u2}")
         # Emoji Ranking
         self.html_txt = self.html_txt.replace("{emoji1_u1}", f"{self.html_stats.emoji1_u1}")
         self.html_txt = self.html_txt.replace("{emoji1_u2}", f"{self.html_stats.emoji1_u2}")
@@ -518,6 +545,7 @@ class HTML:
         self.html_txt = self.html_txt.replace("{monthly_response_pattern}",
                                               f"{self.html_images.monthly_response_pattern}")
         self.html_txt = self.html_txt.replace("{monthly_first_text_ct}", f"{self.html_images.monthly_first_text_ct}")
+        self.html_txt = self.html_txt.replace("{monthly_avg_polarity}", f"{self.html_images.monthly_avg_polarity}")
         self.html_txt = self.html_txt.replace("{domain_counts}", f"{self.html_images.domain_counts}")
         return self
 

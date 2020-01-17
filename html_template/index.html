@@ -1071,9 +1071,78 @@
         </div>
     </div>
 
-    <p class="heading blue">Domain Counts for the Links</p>
+    <p class="heading violet">Monthly Mood Progression</p>
+    <div class="table">
+        <div class="row header violet">
+            <div class="cell">
+                <center>Trend in Mood over time</center>
+                <span style="font-size:10px;"><center>(Note: If value is > 0, then the mood is positive, if value is < 0, then the mood is negative, if the value = 0, then the mood is neutral)</center></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    <img
+                            src="{monthly_avg_polarity}"
+                            height="350"
+                            width="700"
+                    >
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading blue">Top Positive Sentences</p>
     <div class="table">
         <div class="row header blue">
+            <div class="cell">
+                <center>{user1}</center>
+            </div>
+            <div class="cell">
+                <center>{user2}</center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    {top_k_positive_u1}
+                </center>
+            </div>
+            <div class="cell">
+                <center>
+                    {top_k_positive_u2}
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading">Top Negative Sentences</p>
+    <div class="table">
+        <div class="row header">
+            <div class="cell">
+                <center>{user1}</center>
+            </div>
+            <div class="cell">
+                <center>{user2}</center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cell">
+                <center>
+                    {top_k_negative_u1}
+                </center>
+            </div>
+            <div class="cell">
+                <center>
+                    {top_k_negative_u2}
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <p class="heading green">Domain Counts for the Links</p>
+    <div class="table">
+        <div class="row header green">
             <div class="cell">
                 <center>Domains of the links shared across the chat by both the users.</center>
                 <span style="font-size:10px;"><center>(Note: Will be useful to know which platform they use and share the most)</center></span>
