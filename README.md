@@ -73,8 +73,8 @@ python run.py -f "C:\Users\Testuser\Desktop\WhatsApp Chat with Kartheek.txt"
 
 ### 7. Update Patch
 
-- `16Jan2019` Added First to text feature in the plots
-- TODO: Sentiment over period of time, Usual Sentiment through out the 24 hours
+- `16Jan2020` Added First to text feature in the plots
+- `17Jan2020`: Sentiment over period of time, Usual Sentiment through out the 24 hours
     - Can help in understanding if people are showing positive emotions in the morning and negative in the evenings.
 - TODO: Parser for iOS exports.
 
