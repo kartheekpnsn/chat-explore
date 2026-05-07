@@ -55,3 +55,17 @@ def test_longest_conversation_date():
     ])
     date = Response(df).get_the_longest_conversation_date()
     assert date == "13-Jan-2023"
+
+
+def test_burst_messages_use_last_ts_for_gap():
+    """When A sends 3 messages in a row, Bob's response time is measured
+    from the *last* of Alice's messages, not the first."""
+    df = _make_df([
+        ("2023-01-12 09:00", "Alice", "msg1"),
+        ("2023-01-12 09:02", "Alice", "msg2"),
+        ("2023-01-12 09:04", "Alice", "msg3"),   # last Alice msg
+        ("2023-01-12 09:10", "Bob", "reply"),    # 6 min from 09:04, not 10 from 09:00
+    ])
+    stats = Response(df).compute()
+    assert stats["Bob"]["n_responses"] == 1
+    assert stats["Bob"]["median_response_min"] == pytest.approx(6.0, abs=0.1)

@@ -804,7 +804,8 @@ class User:
             )
         else:
             user_stats = stats.get(self.user_name, {})
-            self.avg_response_time = user_stats.get("median_response_min") or 0.0
+            median = user_stats.get("median_response_min")
+            self.avg_response_time = median if median is not None else 0.0
 
         self.logger.write_logger(
             f"In user.py (get_response_time): Fetching response time ends"
@@ -950,14 +951,20 @@ class User:
 
         :return:
         """
-        response_obj = Response(data = data, logger = self.logger)
-        response_obj.group_the_data(). \
-            create_response_time()
-        response_obj.grouped_data['Month'] = response_obj.grouped_data['Timestamp'].dt.strftime('(%Y) %m')
-        userwise_monthly_response_time = response_obj.grouped_data.groupby(['Month', 'User'])[
-            'Response (Min)'].agg(User.harmonic_mean).reset_index()
-        userwise_monthly_response_time.loc[userwise_monthly_response_time['Response (Min)'] > 60, 'Response (Min)'] = -1
-        userwise_monthly_response_time.sort_values(['User', 'Month'], inplace = True)
+        df = data.copy()
+        df['Month'] = df['Timestamp'].dt.strftime('(%Y) %m')
+        rows = []
+        for month, month_df in df.groupby('Month'):
+            stats = Response(data=month_df, logger=self.logger).compute()
+            for user, user_stats in stats.items():
+                median = user_stats.get("median_response_min")
+                if median is not None:
+                    response_min = median if median <= 60 else -1
+                else:
+                    response_min = 0.0
+                rows.append({'Month': month, 'User': user, 'Response (Min)': response_min})
+        userwise_monthly_response_time = pd.DataFrame(rows, columns=['Month', 'User', 'Response (Min)'])
+        userwise_monthly_response_time.sort_values(['User', 'Month'], inplace=True)
         return userwise_monthly_response_time
 
     def get_first_text_monthly_count(self):
