@@ -1,5 +1,4 @@
 import textwrap
-import pytest
 
 
 ANDROID_24H_CHAT = textwrap.dedent("""\
@@ -10,10 +9,10 @@ ANDROID_24H_CHAT = textwrap.dedent("""\
 """)
 
 ANDROID_12H_CHAT = textwrap.dedent("""\
-    12/01/23, 9:00 am - Alice: Hello there
-    12/01/23, 9:01 am - Bob: Hi! How are you?
-    12/01/23, 9:02 am - Alice: Good, thanks
-    12/01/23, 9:03 am - Bob: Great!
+    12/01/23, 9:00 AM - Alice: Hello there
+    12/01/23, 9:01 AM - Bob: Hi! How are you?
+    12/01/23, 9:02 AM - Alice: Good, thanks
+    12/01/23, 9:03 AM - Bob: Great!
 """)
 
 IOS_CHAT = textwrap.dedent("""\
