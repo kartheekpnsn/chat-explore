@@ -1,6 +1,5 @@
 import re
 import pandas as pd
-from typing import Optional
 
 
 class ParseError(Exception):
@@ -13,14 +12,14 @@ _PATTERNS = [
         "header": re.compile(
             r"^(\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2})\s-\s([^:]+):\s(.*)$"
         ),
-        "ts_formats": ["%d/%m/%y, %H:%M", "%m/%d/%y, %H:%M"],
+        "ts_formats": ["%d/%m/%y, %H:%M", "%m/%d/%y, %H:%M", "%d/%m/%Y, %H:%M", "%m/%d/%Y, %H:%M"],
     },
     {
         "name": "android_12h",
         "header": re.compile(
             r"^(\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s[aApP][mM])\s-\s([^:]+):\s(.*)$"
         ),
-        "ts_formats": ["%d/%m/%y, %I:%M %p", "%m/%d/%y, %I:%M %p"],
+        "ts_formats": ["%d/%m/%y, %I:%M %p", "%m/%d/%y, %I:%M %p", "%d/%m/%Y, %I:%M %p", "%m/%d/%Y, %I:%M %p"],
     },
     {
         "name": "ios",
@@ -31,7 +30,7 @@ _PATTERNS = [
     },
 ]
 
-_MATCH_THRESHOLD = 0.5
+_MIN_HEADER_COUNT = 2
 
 
 class ChatParser:
@@ -44,7 +43,7 @@ class ChatParser:
             lines = [l.rstrip("\n") for l in f if l.strip()]
 
         pattern, ts_format = self._detect_pattern(lines)
-        rows = self._extract_rows(lines, pattern, ts_format)
+        rows = self._extract_rows(lines, pattern)
 
         df = pd.DataFrame(rows, columns=["Timestamp", "User", "Message"])
         df["Timestamp"] = pd.to_datetime(df["Timestamp"], format=ts_format)
@@ -56,7 +55,7 @@ class ChatParser:
         for pat in _PATTERNS:
             regex = pat["header"]
             matched = sum(1 for l in lines if regex.match(l))
-            if matched / max(len(lines), 1) >= _MATCH_THRESHOLD:
+            if matched >= _MIN_HEADER_COUNT:
                 ts_format = self._detect_ts_format(lines, regex, pat["ts_formats"])
                 return regex, ts_format
         raise ParseError(
@@ -65,24 +64,32 @@ class ChatParser:
         )
 
     def _detect_ts_format(self, lines: list[str], regex, ts_formats: list[str]) -> str:
-        sample = next((l for l in lines if regex.match(l)), None)
-        if sample is None:
-            return ts_formats[0]
-        ts_str = regex.match(sample).group(1)
-        for fmt in ts_formats:
+        for line in lines:
+            m = regex.match(line)
+            if not m:
+                continue
+            ts_str = m.group(1)
+            parts = ts_str.split("/")
+            if len(parts) < 2:
+                continue
             try:
-                pd.to_datetime(ts_str, format=fmt)
-                return fmt
+                first_num = int(parts[0])
+                second_num = int(parts[1])
             except ValueError:
                 continue
+            if first_num > 12:
+                return ts_formats[0]   # must be day-first
+            if second_num > 12:
+                return ts_formats[1]   # must be month-first
+        # all dates ambiguous — fall back to day-first (international default)
         return ts_formats[0]
 
-    def _extract_rows(self, lines: list[str], pattern, ts_format: str) -> list[tuple]:
+    def _extract_rows(self, lines: list[str], pattern) -> list[tuple]:
         rows: list[tuple] = []
         for line in lines:
             m = pattern.match(line)
             if m:
-                rows.append((m.group(1), m.group(2).strip(), m.group(3)))
+                rows.append((m.group(1), m.group(2).strip().strip("‎‏"), m.group(3)))
             elif rows:
                 ts, user, msg = rows[-1]
                 rows[-1] = (ts, user, msg + "\n" + line)
