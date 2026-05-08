@@ -58,7 +58,6 @@ def preprocess_data(filePath, logger):
     ).drop_message(
         contains=".vcf (file attached)"
     )
-    preprocess.clean_data(True)
     preprocess.prepare_df()
     preprocess.check_n_users()
     preprocess.remove_forward_messages(min_length=15)
