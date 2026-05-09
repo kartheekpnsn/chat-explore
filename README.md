@@ -1,93 +1,142 @@
-# Chat Explore
+---
+title: Chat Explore
+description: Generate WhatsApp chat analytics and interactive HTML reports for one-to-one conversations.
+---
 
-This is a script that generates an infographic that has statistics and plots between any two users whatsapp chat export.
+## Overview
 
-- **Limitation 1**: Currently only works with **two** users chat, **Group chats** doesn't work.
-- **Limitation 2**: Currently only works for Android exports. **iOS** not supported.
+Chat Explore analyzes a WhatsApp chat export between two participants and generates:
 
-## Getting Started
+* Cleaned tabular data for inspection.
+* Statistical summaries for each participant and overall conversation.
+* Visualizations for language usage, activity trends, sentiment, emoji usage, and response behavior.
+* A standalone HTML report with embedded charts and summary tables.
 
-### 1. Install Python 3+
+The project is implemented as a Python CLI workflow with modular parsing, preprocessing, analysis, plotting, and report generation components.
 
-If you don't already have Python 3+ installed, grab it from <https://www.python.org/downloads/>. You'll want to download install the latest version of **Python 3.x**. As of 2019-11-22, that is Version 3.8.
+## Highlights
 
-### 2. Get Your Whatsapp Chat Export Data
-Here you can find out how to export your whatsapp chat between two users: <https://faq.whatsapp.com/en/android/23756533/></br>
+* Supports multiple WhatsApp export formats through automatic format detection.
+* Handles multi-line messages correctly during parsing.
+* Computes per-user and overall metrics, including response-time statistics.
+* Produces a single shareable HTML report file with embedded plot images.
+* Includes automated tests for parser behavior, response-time logic, and core CLI I/O paths.
 
-To use this script, you need to export the chat history between yourself and any other user.
-That exported chat (.txt) needs to be present in the same system which runs the code mentioned below.
+## Supported Input Formats
 
-### 3. Clone This Repository
+The parser currently supports:
 
-On <https://github.com/kartheekpnsn/chat-explore>, click the green "Clone or Download" button at the top right of the page. If you want to get started with this script more quickly, click the "Download ZIP" button, and extract the ZIP somewhere on your computer.
+* Android 24-hour exports.
+* Android 12-hour exports.
+* iOS bracketed timestamp exports.
 
-### 4. Install Dependencies
+Date parsing supports day-first and month-first interpretations when necessary.
 
-In a [command prompt or Terminal window](https://tutorial.djangogirls.org/en/intro_to_command_line/#what-is-the-command-line), [navigate to the directory](https://tutorial.djangogirls.org/en/intro_to_command_line/#change-current-directory) containing this repository's files. Then, type the following, and press enter:
+## Current Constraints
 
-```shell
+* The analysis pipeline requires exactly two unique users in the chat export.
+* Group chats are not supported in the current implementation.
+* The media-count plot is not implemented.
+
+## Quick Start
+
+### Prerequisites
+
+* Python 3.11 or later.
+* UV package manager.
+
+### Installation
+
+```bash
+uv venv .venv
+uv sync
+```
+
+If you prefer a pip-style setup:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-#### wordcloud installation problem
-**Note**: If you are facing issues installing `wordcloud` on Windows10. The follow the below procedure.
+## Usage
 
-- Go to: https://www.lfd.uci.edu/~gohlke/pythonlibs/#wordcloud
-- Click on the matching whl file to download.
-    - **Naming**: wordcloud-**[version]**-cp **[python-version]**-cp **[python-version]**-win **[32bit-or-64bit]**.whl
-- Then below command in command prompt
+Run the analysis with a WhatsApp exported text file:
 
-```shell
-pip install <location_of_wordcloud_whl_file>
+```bash
+uv run python run.py -f /path/to/whatsapp_chat.txt
 ```
 
-**Example:**
+Example:
 
-```shell
-pip install "C:\Users\Testuser\Desktop\wordcloud-1.6.0-cp38-cp38-win32.whl"
+```bash
+uv run python run.py -f data/chat-madhu.txt
 ```
 
+The CLI exits with an error if:
 
-### 5. Run the Script
+* The input path does not exist.
+* The input path is not a file.
+* The input file is empty.
+* The parsed conversation does not contain exactly two users.
 
-In the same command prompt or Terminal window, type the following, and press enter:
+## Outputs
 
-```shell
-python run.py -f <file_path>
+After a successful run, outputs are generated in:
+
+* data/html/: Timestamped report, for example chat_explore_YYYYMMDDHHMMSS.html.
+* data/excel/clean_data.xlsx: Cleaned and parsed conversation data.
+
+Temporary artifacts are generated during runtime and then cleaned up:
+
+* plots/: Intermediate plot PNG files.
+* logs/: Runtime log files.
+
+## What the Report Includes
+
+The generated HTML report includes:
+
+* Totals: Messages, words, unique words, links, emojis, screen touches, active dates.
+* Averages: Per-day and per-message communication metrics.
+* Response analysis: Average response time per participant and overall.
+* Top patterns: Active days, longest conversation windows, top n-grams.
+* Emoji insights: Ranked emoji usage by participant.
+* Temporal trends: Monthly messaging, words, emojis, sentiment, and first-text behavior.
+* Visual summaries: Word clouds and timeline plots.
+
+## Development
+
+### Run Tests
+
+```bash
+uv run pytest -q
 ```
 
-#### Example:
-```shell
-python run.py -f "C:\Users\Testuser\Desktop\WhatsApp Chat with Kartheek.txt"
-```
+### Project Layout
 
-### 6. Sample Output
+* run.py: CLI entry point and orchestration flow.
+* src/core/: Parsing, preprocessing, user modeling, response analytics.
+* src/analysis/: Sentiment analysis helpers.
+* src/plotting/: Plot generation modules.
+* src/output/: HTML report generation.
+* src/utils/: Logging, helper utilities, cleanup.
+* tests/: Parser, response, and CLI-oriented tests.
 
-**Sample 1**:
+## Sample Report Screens
 
-![Sample 1 Text](https://raw.githubusercontent.com/kartheekpnsn/chat-explore/master/samples/ss1.PNG "Output Sample 1")
+![Sample report screen 1](samples/ss1.PNG)
 
-**Sample 2**:
+![Sample report screen 2](samples/ss2.PNG)
 
-![Sample 2 Text](https://raw.githubusercontent.com/kartheekpnsn/chat-explore/master/samples/ss2.PNG "Output Sample 2")
+## Contributors
 
-### 7. Update Patch
+* [@kartheekpnsn](https://github.com/kartheekpnsn)
+* [@yashkuru](https://github.com/yashkuru)
 
-- `16Jan2020` Added First to text feature in the plots
-- `17Jan2020`: Sentiment over period of time, Usual Sentiment through out the 24 hours
-    - Can help in understanding if people are showing positive emotions in the morning and negative in the evenings.
-- TODO: Parser for iOS exports.
+## Acknowledgement
 
+This project idea was inspired by the Reddit visualization thread:
 
-### 8. Contributors
-
-- [@Kartheek Palepu](https://www.github.com/kartheekpnsn)
-- [@Yashwanth Kuruganti](https://github.com/yashkuru)
-
-### 9. Idea Credits
-
-**Acknowledgement:**
-
-- This entire idea is inspired from a reddit post (links posted below):
-    - Link to the [post](https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/)
-    - [Author Citation](https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/eem8gke/)
+* [Original post](https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/)
+* [Author citation](https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/eem8gke/)
