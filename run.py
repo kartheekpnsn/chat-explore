@@ -151,10 +151,11 @@ def plot_progression(preprocess, user_data_list):
     )
 
 
-def generate_html(user_data_list):
+def generate_html(user_data_list, logger):
     """
 
     :param user_data_list:
+    :param logger:
     :return:
     """
     html_obj = HTML(
@@ -203,7 +204,7 @@ if __name__ == "__main__":
     plot_progression(preprocess, user_data_list)
 
     # Generate HTML
-    output_file = generate_html(user_data_list)
+    output_file = generate_html(user_data_list, logger)
 
     # Delete Logs and Plots to save memory
     DeleteFiles(path_list=("plots/", "logs/")).delete()

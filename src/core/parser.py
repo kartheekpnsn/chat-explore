@@ -26,7 +26,7 @@ _PATTERNS = [
         "header": re.compile(
             r"^\[(\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}:\d{2})\]\s([^:]+):\s(.*)$"
         ),
-        "ts_formats": ["%d/%m/%Y, %H:%M:%S", "%m/%d/%Y, %H:%M:%S"],
+        "ts_formats": ["%d/%m/%Y, %H:%M:%S", "%m/%d/%Y, %H:%M:%S", "%d/%m/%y, %H:%M:%S", "%m/%d/%y, %H:%M:%S"],
     },
 ]
 
@@ -45,6 +45,17 @@ class ChatParser:
         pattern, ts_format = self._detect_pattern(lines)
         rows = self._extract_rows(lines, pattern)
 
+        df = pd.DataFrame(rows, columns=["Timestamp", "User", "Message"])
+        df["Timestamp"] = pd.to_datetime(df["Timestamp"], format=ts_format)
+        df["Date"] = df["Timestamp"].dt.strftime("%d-%b-%Y")
+        df["Weekday"] = df["Timestamp"].dt.strftime("%a")
+        return df
+
+    def parse_lines(self, lines: list[str]) -> pd.DataFrame:
+        """Parse from an already-loaded and filtered list of lines."""
+        non_empty = [l.rstrip("\n") for l in lines if l.strip()]
+        pattern, ts_format = self._detect_pattern(non_empty)
+        rows = self._extract_rows(non_empty, pattern)
         df = pd.DataFrame(rows, columns=["Timestamp", "User", "Message"])
         df["Timestamp"] = pd.to_datetime(df["Timestamp"], format=ts_format)
         df["Date"] = df["Timestamp"].dt.strftime("%d-%b-%Y")

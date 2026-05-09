@@ -59,7 +59,11 @@ class Preprocess:
             "In preprocess.py (prepare_df): Preparation of data frame starts"
         )
         try:
-            self.pd_data = ChatParser(self.file).parse()
+            parser = ChatParser(self.file)
+            if self.data is not None:
+                self.pd_data = parser.parse_lines(self.data)
+            else:
+                self.pd_data = parser.parse()
             self.users = list(self.pd_data["User"].unique())
         except ParseError as exc:
             self.logger.write_logger(
@@ -113,5 +117,5 @@ class Preprocess:
         return self
 
     def write_data(self, path="data/excel/clean_data.xlsx"):
-        os.makedirs(os.path.dirname(path), exist_ok=True)
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
         self.pd_data.to_excel(path, index=False)
