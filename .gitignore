@@ -6,6 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
+# Images
+*.png
+
+# Lock files
+uv.lock
+
 # Distribution / packaging
 .Python
 build/

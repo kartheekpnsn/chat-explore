@@ -1,8 +1,9 @@
 import base64
 import datetime
 import math
+import os
 
-from action_logging import Logger
+from src.utils.action_logging import Logger
 
 
 class HTMLImages:
@@ -366,6 +367,7 @@ class HTMLStats:
             self.user1.pd_emoji_rank.shape[0] == 5
             and self.user2.pd_emoji_rank.shape[0] == 5
         ):
+            print(self.user1.pd_emoji_rank)
             self.emoji1_u1 = self.user1.pd_emoji_rank["Emoji"].tolist()[0]
             self.emoji1_u2 = self.user2.pd_emoji_rank["Emoji"].tolist()[0]
             self.emoji2_u1 = self.user1.pd_emoji_rank["Emoji"].tolist()[1]
@@ -862,6 +864,7 @@ class HTML:
         """
         current_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
         self.file_name = f"data/html/chat_explore_{current_time}.html"
+        os.makedirs(os.path.dirname(self.file_name), exist_ok=True)
         with open(f"{self.file_name}", "wb") as f:
             f.write(self.html_txt.encode("utf-8"))
         return self

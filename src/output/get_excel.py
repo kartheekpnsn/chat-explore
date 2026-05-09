@@ -21,20 +21,16 @@ import tqdm
 
 warnings.filterwarnings("ignore")
 
-sys.path.append(os.path.abspath(os.path.join("src/")))
-
-from action_logging import Logger
-from delete_files import DeleteFiles
-from generate_html import HTML
-from llm import OpenAIUtils
-from plot import Plot
-from plot_progression import PlotProgression
-from plot_user import PlotUser
-from preprocess import Preprocess
-from user import User
-
-# Load User defined Modules --------------------------------------------------------------------------------------------
-from utils import isTextBasedBrowser
+from src.utils.action_logging import Logger
+from src.utils.delete_files import DeleteFiles
+from src.output.generate_html import HTML
+from src.integrations.llm import OpenAIUtils
+from src.plotting.plot import Plot
+from src.plotting.plot_progression import PlotProgression
+from src.plotting.plot_user import PlotUser
+from src.core.preprocess import Preprocess
+from src.core.user import User
+from src.utils.helpers import isTextBasedBrowser
 
 
 # Methods to be run ----------------------------------------------------------------------------------------------------
