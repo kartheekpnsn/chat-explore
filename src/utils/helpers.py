@@ -1,5 +1,5 @@
 """
-    Copyright: https://github.com/luka1199/geo-heatmap/blob/master/utils.py
+Copyright: https://github.com/luka1199/geo-heatmap/blob/master/utils.py
 """
 
 import webbrowser

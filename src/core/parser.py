@@ -12,21 +12,36 @@ _PATTERNS = [
         "header": re.compile(
             r"^(\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2})\s-\s([^:]+):\s(.*)$"
         ),
-        "ts_formats": ["%d/%m/%y, %H:%M", "%m/%d/%y, %H:%M", "%d/%m/%Y, %H:%M", "%m/%d/%Y, %H:%M"],
+        "ts_formats": [
+            "%d/%m/%y, %H:%M",
+            "%m/%d/%y, %H:%M",
+            "%d/%m/%Y, %H:%M",
+            "%m/%d/%Y, %H:%M",
+        ],
     },
     {
         "name": "android_12h",
         "header": re.compile(
             r"^(\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s[aApP][mM])\s-\s([^:]+):\s(.*)$"
         ),
-        "ts_formats": ["%d/%m/%y, %I:%M %p", "%m/%d/%y, %I:%M %p", "%d/%m/%Y, %I:%M %p", "%m/%d/%Y, %I:%M %p"],
+        "ts_formats": [
+            "%d/%m/%y, %I:%M %p",
+            "%m/%d/%y, %I:%M %p",
+            "%d/%m/%Y, %I:%M %p",
+            "%m/%d/%Y, %I:%M %p",
+        ],
     },
     {
         "name": "ios",
         "header": re.compile(
             r"^\[(\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}:\d{2})\]\s([^:]+):\s(.*)$"
         ),
-        "ts_formats": ["%d/%m/%Y, %H:%M:%S", "%m/%d/%Y, %H:%M:%S", "%d/%m/%y, %H:%M:%S", "%m/%d/%y, %H:%M:%S"],
+        "ts_formats": [
+            "%d/%m/%Y, %H:%M:%S",
+            "%m/%d/%Y, %H:%M:%S",
+            "%d/%m/%y, %H:%M:%S",
+            "%m/%d/%y, %H:%M:%S",
+        ],
     },
 ]
 
@@ -89,9 +104,9 @@ class ChatParser:
             except ValueError:
                 continue
             if first_num > 12:
-                return ts_formats[0]   # must be day-first
+                return ts_formats[0]  # must be day-first
             if second_num > 12:
-                return ts_formats[1]   # must be month-first
+                return ts_formats[1]  # must be month-first
         # all dates ambiguous — fall back to day-first (international default)
         return ts_formats[0]
 

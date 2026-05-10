@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     from src.integrations.llm import OpenAIUtils
+
     pd_data = pd.read_excel("data/excel/clean_data.xlsx")
     openai_utils = OpenAIUtils()
     if not openai_utils._available:

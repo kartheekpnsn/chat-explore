@@ -1,6 +1,5 @@
 import textwrap
 
-
 ANDROID_24H_CHAT = textwrap.dedent("""\
     12/01/23, 09:00 - Alice: Hello there
     12/01/23, 09:01 - Bob: Hi! How are you?

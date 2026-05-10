@@ -1,7 +1,13 @@
 import pytest
 import pandas as pd
 from src.core.parser import ChatParser, ParseError
-from tests.conftest import ANDROID_24H_CHAT, ANDROID_12H_CHAT, IOS_CHAT, MULTILINE_CHAT, GARBAGE_CHAT
+from tests.conftest import (
+    ANDROID_24H_CHAT,
+    ANDROID_12H_CHAT,
+    IOS_CHAT,
+    MULTILINE_CHAT,
+    GARBAGE_CHAT,
+)
 
 
 def test_android_24h_returns_dataframe(tmp_path):

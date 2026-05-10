@@ -28,14 +28,18 @@ class Preprocess:
 
     def read_file(self):
         self.logger.write_logger(
-            "In preprocess.py (read_file): Reading of input file: " + self.file + " starts"
+            "In preprocess.py (read_file): Reading of input file: "
+            + self.file
+            + " starts"
         )
         with open(self.file, "r", encoding="utf8") as f:
             self.data = f.read()
         self.data = self.data.splitlines()
         self.data_backup = self.data.copy()
         self.logger.write_logger(
-            "In preprocess.py (read_file): Reading of input file: " + self.file + " ends"
+            "In preprocess.py (read_file): Reading of input file: "
+            + self.file
+            + " ends"
         )
 
     def print_sample(self, n_lines=10):
@@ -98,9 +102,7 @@ class Preprocess:
 
     def remove_forward_messages(self, min_length=15):
         message_count = (
-            self.pd_data.groupby(["User", "Timestamp"])["Message"]
-            .count()
-            .reset_index()
+            self.pd_data.groupby(["User", "Timestamp"])["Message"].count().reset_index()
         )
         messages_to_remove = message_count[message_count["Message"] > min_length][
             ["User", "Timestamp"]

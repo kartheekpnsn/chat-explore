@@ -4,9 +4,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 class Sentiment:
 
     def __init__(self):
-        """
-
-        """
+        """ """
         pass
 
     @staticmethod
@@ -18,7 +16,7 @@ class Sentiment:
         :param scores:
         :return:
         """
-        return scores['compound']
+        return scores["compound"]
 
     @staticmethod
     def vader(sentence):

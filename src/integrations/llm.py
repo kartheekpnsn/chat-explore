@@ -12,18 +12,22 @@ class OpenAIUtils:
         self._available = False
         try:
             from dotenv import load_dotenv
+
             load_dotenv()
             self.__llm = self.__load_llm()
             self.__embeddings = self.__load_embed()
             self._available = True
         except Exception as exc:
-            logger.warning(f"LLM integration unavailable: {exc}. LLM enrichment will be skipped.")
+            logger.warning(
+                f"LLM integration unavailable: {exc}. LLM enrichment will be skipped."
+            )
             self.__llm = None
             self.__embeddings = None
 
     def __load_llm(self):
         from langchain.prompts import ChatPromptTemplate
         from langchain_openai import AzureChatOpenAI
+
         llm_api_key = os.environ.get(f"{self.llm_to_use}_api_key")
         llm_api_version = os.environ.get(f"{self.llm_to_use}_api_version")
         llm_azure_endpoint = os.environ.get(f"{self.llm_to_use}_api_endpoint")
@@ -40,6 +44,7 @@ class OpenAIUtils:
 
     def __load_embed(self):
         from langchain_openai import AzureOpenAIEmbeddings
+
         embed_api_key = os.environ.get(f"{self.embed_to_use}_api_key")
         embed_api_version = os.environ.get(f"{self.embed_to_use}_api_version")
         embed_azure_endpoint = os.environ.get(f"{self.embed_to_use}_api_endpoint")

@@ -49,13 +49,15 @@ def test_write_data_creates_missing_directory(tmp_path):
     from unittest.mock import MagicMock
 
     p = Preprocess(input_file="fake.txt", logger=MagicMock())
-    p.pd_data = pd.DataFrame({
-        "Timestamp": pd.to_datetime(["2023-01-12 09:00"]),
-        "User": ["Alice"],
-        "Message": ["hi"],
-        "Date": ["12-Jan-2023"],
-        "Weekday": ["Thu"],
-    })
+    p.pd_data = pd.DataFrame(
+        {
+            "Timestamp": pd.to_datetime(["2023-01-12 09:00"]),
+            "User": ["Alice"],
+            "Message": ["hi"],
+            "Date": ["12-Jan-2023"],
+            "Weekday": ["Thu"],
+        }
+    )
     out_path = str(tmp_path / "nested" / "deep" / "output.xlsx")
     p.write_data(path=out_path)
     assert os.path.exists(out_path)
