@@ -20,6 +20,7 @@ warnings.filterwarnings("ignore")
 
 from src.utils.action_logging import Logger
 from src.utils.delete_files import DeleteFiles
+from src.utils.metrics_store import MetricsStore
 from src.output.generate_html import HTML
 from src.plotting.plot import Plot
 from src.plotting.plot_progression import PlotProgression
@@ -74,7 +75,7 @@ def user_wise_analysis(preprocess, logger):
     """
     # Start Analysis ---------------------------------------------------------------------------------------------------
     user_data_list = []
-    for user_idx, user in enumerate(preprocess.users + ["Overall"]):
+    for _, user in enumerate(preprocess.users + ["Overall"]):
         logger.write_logger(f"Starting for User: {user}")
         if user == "Overall":
             user_subset_data = preprocess.pd_data.copy()
@@ -98,57 +99,155 @@ def user_wise_analysis(preprocess, logger):
             data=preprocess.pd_data
         )
 
-        # Plot user statistics -----------------------------------------------------------------------------------------
-        plot_user_obj = PlotUser(user_object=user_data, user_idx=user_idx + 1)
-        plot_user_obj.plot_top_k_ngrams(n_grams=1, k=10)
-        plot_user_obj.plot_top_k_ngrams(n_grams=2, k=10)
-        plot_user_obj.plot_top_k_ngrams(n_grams=3, k=10)
-        user_data.pd_emoji_rank = plot_user_obj.plot_top_k_emojis(k=5, normalize=True)
-        plot_user_obj.plot_word_cloud()
-        plot_user_obj.plot_word_cloud(n_grams=2)
-        plot_user_obj.plot_word_cloud(n_grams=3)
-
         user_data_list.append(user_data)
 
         logger.write_logger(f"Ending for User: {user}")
     return user_data_list
 
 
-def plot_overall(preprocess, user_data_list):
+def plot_user_wise(store, user_data_list):
     """
 
-    :param preprocess:
+    :param store:
     :param user_data_list:
     :return:
     """
-    plot_obj = Plot(data=preprocess.pd_data, color_map=preprocess.color_map)
+    meta = store.load_json("meta")
+    for user_idx, user_data in enumerate(user_data_list):
+        u = user_idx + 1
+        plot_user_obj = PlotUser(
+            store=store,
+            user_idx=u,
+            user_color=meta["user_colors"][user_data.user_name],
+        )
+        plot_user_obj.plot_top_k_ngrams(n_grams=1, k=10)
+        plot_user_obj.plot_top_k_ngrams(n_grams=2, k=10)
+        plot_user_obj.plot_top_k_ngrams(n_grams=3, k=10)
+        user_data.pd_emoji_rank = plot_user_obj.plot_top_k_emojis(k=5)
+        plot_user_obj.plot_word_cloud(n_grams=1)
+        plot_user_obj.plot_word_cloud(n_grams=2)
+        plot_user_obj.plot_word_cloud(n_grams=3)
+
+
+def save_metrics(preprocess, user_data_list, store):
+    """
+    Compute all plot metrics and persist them as JSON in data/json/.
+
+    :param preprocess:
+    :param user_data_list:
+    :param store: MetricsStore instance
+    :return:
+    """
+    import numpy as np
+    import pandas as pd
+
+    data = preprocess.pd_data
+    overall = user_data_list[-1]
+
+    # --- overall plots ---
+    date_n_msgs = data.groupby(["Date", "User"])["Message"].count().reset_index()
+    date_n_msgs["Date"] = pd.to_datetime(date_n_msgs["Date"], format="%d-%b-%Y")
+    date_n_msgs.sort_values("Date", inplace=True)
+    date_n_msgs["Date"] = date_n_msgs["Date"].dt.strftime("%d-%b-%Y")
+    date_n_msgs.rename(columns={"Message": "# of Msgs"}, inplace=True)
+    store.save_df("date_n_msgs", date_n_msgs)
+
+    weekday_n_msgs = data.groupby(["Weekday", "User"])["Message"].count().reset_index()
+    weekday_n_msgs.rename(columns={"Message": "# of Msgs"}, inplace=True)
+    store.save_df("weekday_n_msgs", weekday_n_msgs)
+
+    _tmp = data.copy()
+    _tmp["Hour"] = _tmp["Timestamp"].dt.hour
+    hour_n_msgs = _tmp.groupby(["Hour", "User"])["Message"].count().reset_index()
+    hour_n_msgs.rename(columns={"Message": "# of Msgs"}, inplace=True)
+    store.save_df("hour_n_msgs", hour_n_msgs)
+
+    store.save_df("date_n_emojis", overall.get_userwise_emoji_count())
+    store.save_df("domain_counts", overall.get_domain_count())
+
+    # --- monthly progression ---
+    _tmp2 = data.copy()
+    _tmp2["Month"] = _tmp2["Timestamp"].dt.strftime("(%Y) %m")
+    monthly_msg = _tmp2.groupby(["Month", "User"])["Message"].count().reset_index()
+    monthly_msg.rename(columns={"Message": "# of Msgs"}, inplace=True)
+    store.save_df("monthly_msg_progression", monthly_msg)
+
+    monthly_word = overall.get_userwise_monthly_word_counts()
+    monthly_word.rename(columns={"Word Count": "Avg. # of Words (per Msg)"}, inplace=True)
+    store.save_df("monthly_word_progression", monthly_word)
+
+    monthly_emoji = overall.get_userwise_monthly_emoji_counts()
+    monthly_emoji.rename(columns={"Emoji Count": "Avg. # of Emojis (per Msg)"}, inplace=True)
+    store.save_df("monthly_emoji_progression", monthly_emoji)
+
+    monthly_first_text = overall.get_first_text_monthly_count()
+    monthly_first_text.rename(columns={"Date": "No. of times user texted first"}, inplace=True)
+    store.save_df("monthly_first_text_ct", monthly_first_text)
+
+    monthly_polarity = overall.get_monthly_avg_polarity()
+    monthly_polarity.rename(columns={"Polarity Score": "Avg. Mood Score"}, inplace=True)
+    store.save_df("monthly_avg_polarity", monthly_polarity)
+
+    monthly_response = overall.get_userwise_monthly_response_time(data=data)
+    monthly_response.rename(columns={"Response (Min)": "Avg. Response (Min)"}, inplace=True)
+    store.save_df("monthly_response_time_progression", monthly_response)
+
+    # --- per-user data ---
+    for user_idx, user_data in enumerate(user_data_list):
+        u = user_idx + 1
+        store.save_df(f"top_k_1words_u{u}", user_data.get_top_k_words(n_grams=1, k=10, normalize=False))
+        store.save_df(f"top_k_2words_u{u}", user_data.get_top_k_words(n_grams=2, k=10, normalize=False))
+        store.save_df(f"top_k_3words_u{u}", user_data.get_top_k_words(n_grams=3, k=10, normalize=False))
+        top_emojis = user_data.get_top_k_emojis(k=5, normalize=True)
+        top_emojis["Count %"] = np.round(top_emojis["Count"] * 100)
+        store.save_df(f"top_k_emojis_u{u}", top_emojis)
+        store.save_json(f"word_cloud_1words_u{u}", user_data.get_words_for_wordcloud(n_grams=1))
+        store.save_json(f"word_cloud_2words_u{u}", user_data.get_words_for_wordcloud(n_grams=2))
+        store.save_json(f"word_cloud_3words_u{u}", user_data.get_words_for_wordcloud(n_grams=3))
+
+    # --- metadata ---
+    store.save_json("meta", {
+        "color_map": preprocess.color_map,
+        "min_year": int(min(data["Timestamp"].dt.year)),
+        "max_year": int(max(data["Timestamp"].dt.year)),
+        "user_colors": {ud.user_name: ud.user_color for ud in user_data_list},
+    })
+
+
+def plot_overall(store):
+    """
+
+    :param store:
+    :return:
+    """
+    meta = store.load_json("meta")
+    plot_obj = Plot(store=store, color_map=meta["color_map"])
     plot_obj.plot_date_n_msgs()
     plot_obj.plot_weekday_n_msgs()
     plot_obj.plot_hour_n_msgs()
-    plot_obj.plot_domain_counts(user_object=user_data_list[-1])
-    plot_obj.plot_date_n_emojis(user_object=user_data_list[-1])
+    plot_obj.plot_domain_counts()
+    plot_obj.plot_date_n_emojis()
     # TODO: Add body to the media count method
-    # plot_obj.plot_media_counts(user_object = user_data_list[-1])
+    # plot_obj.plot_media_counts()
 
 
-def plot_progression(preprocess, user_data_list):
+def plot_progression(store):
     """
 
-    :param preprocess:
-    :param user_data_list:
+    :param store:
     :return:
     """
+    meta = store.load_json("meta")
     plot_progression_obj = PlotProgression(
-        data=preprocess.pd_data, color_map=preprocess.color_map, cumulative=False
+        store=store, color_map=meta["color_map"],
+        min_year=meta["min_year"], max_year=meta["max_year"], cumulative=False
     )
     plot_progression_obj.plot_monthly_msg_progression()
-    plot_progression_obj.plot_monthly_word_progression(user_object=user_data_list[-1])
-    plot_progression_obj.plot_monthly_emoji_progression(user_object=user_data_list[-1])
-    plot_progression_obj.plot_first_text_progression(user_object=user_data_list[-1])
-    plot_progression_obj.plot_sentiment_progression(user_object=user_data_list[-1])
-    plot_progression_obj.plot_monthly_response_time_progression(
-        user_object=user_data_list[-1]
-    )
+    plot_progression_obj.plot_monthly_word_progression()
+    plot_progression_obj.plot_monthly_emoji_progression()
+    plot_progression_obj.plot_first_text_progression()
+    plot_progression_obj.plot_sentiment_progression()
+    plot_progression_obj.plot_monthly_response_time_progression()
 
 
 def generate_html(user_data_list, logger):
@@ -197,11 +296,18 @@ if __name__ == "__main__":
     # User wise Analysis
     user_data_list = user_wise_analysis(preprocess, logger)
 
-    # Plot the Overall Stats
-    plot_overall(preprocess, user_data_list)
+    # Save all computed metrics to data/json/
+    store = MetricsStore(path="data/json/")
+    save_metrics(preprocess, user_data_list, store)
 
-    # Plot the Progression
-    plot_progression(preprocess, user_data_list)
+    # Plot user-wise Stats from JSON
+    plot_user_wise(store, user_data_list)
+
+    # Plot the Overall Stats from JSON
+    plot_overall(store)
+
+    # Plot the Progression from JSON
+    plot_progression(store)
 
     # Generate HTML
     output_file = generate_html(user_data_list, logger)
