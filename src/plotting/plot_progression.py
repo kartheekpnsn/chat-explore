@@ -1,16 +1,15 @@
 import os
 import warnings
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
 
 warnings.filterwarnings("ignore")
 
 
 class PlotProgression:
-
     def __init__(
         self,
         store=None,

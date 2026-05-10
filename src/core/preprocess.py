@@ -2,8 +2,6 @@ import os
 import sys
 import warnings
 
-import pandas as pd
-
 from src.core.parser import ChatParser, ParseError
 from src.utils.action_logging import Logger
 
@@ -11,7 +9,6 @@ warnings.filterwarnings("ignore")
 
 
 class Preprocess:
-
     def __init__(self, input_file, logger=None):
         self.file = input_file
         if logger is None:
@@ -50,7 +47,7 @@ class Preprocess:
 
     def drop_message(
         self,
-        contains="Messages to this chat and calls are now secured with end-to-end encryption",
+        contains="Messages to this chat and calls are now secured with end-to-end encryption",  # noqa: E501
     ):
         self.logger.write_logger(
             "In preprocess.py (drop_message): Dropping messages containing: " + contains
@@ -83,11 +80,11 @@ class Preprocess:
         n_users = len(users)
         if n_users != 2:
             self.logger.write_logger(
-                "In preprocess.py (check_n_users): You need exactly 2 users in the chat.",
+                "In preprocess.py (check_n_users): You need exactly 2 users in the chat.",  # noqa: E501
                 error=True,
             )
             self.logger.write_logger(
-                f"In preprocess.py (check_n_users): Found {n_users} users: {','.join(users)}",
+                f"In preprocess.py (check_n_users): Found {n_users} users: {','.join(users)}",  # noqa: E501
                 error=True,
             )
             sys.exit(1)

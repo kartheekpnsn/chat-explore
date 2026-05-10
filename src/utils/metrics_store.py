@@ -5,7 +5,6 @@ import pandas as pd
 
 
 class MetricsStore:
-
     def __init__(self, path="data/json/"):
         self.path = path
         os.makedirs(path, exist_ok=True)

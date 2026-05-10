@@ -9,7 +9,6 @@ warnings.filterwarnings("ignore")
 
 
 class PlotUser:
-
     def __init__(
         self, store=None, user_idx=1, user_color="#2ecc71", save_path="plots/"
     ):

@@ -1,15 +1,15 @@
 """
-    Acknowledgement:
-    - This entire idea is inspired from a reddit post (links posted below):
-    - Link: https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/
-    - Author Citation: https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/eem8gke/
+Acknowledgement:
+- This entire idea is inspired from a reddit post (links posted below):
+- Link: https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/
+- Author Citation: https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/eem8gke/
 
-    ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐
-    <================== This entire code is placed in: https://github.com/kartheekpnsn/chat-explore ==================>
-    ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐
+┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐  # noqa: E501
+<================== This entire code is placed in: https://github.com/kartheekpnsn/chat-explore ==================>  # noqa: E501
+┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐  # noqa: E501
 """
 
-# Load System Modules --------------------------------------------------------------------------------------------------
+# Load System Modules --------------------------------------------------------------------------------------------------  # noqa: E501
 import os
 import sys
 import warnings
@@ -18,45 +18,39 @@ from argparse import ArgumentParser, RawTextHelpFormatter
 
 warnings.filterwarnings("ignore")
 
-from src.utils.action_logging import Logger
-from src.utils.delete_files import DeleteFiles
-from src.utils.metrics_store import MetricsStore
-from src.output.generate_html import HTML
-from src.plotting.plot import Plot
-from src.plotting.plot_progression import PlotProgression
-from src.plotting.plot_user import PlotUser
-from src.core.preprocess import Preprocess
-from src.core.user import User
-from src.utils.helpers import isTextBasedBrowser
+from src.core.preprocess import Preprocess  # noqa: E402
+from src.core.user import User  # noqa: E402
+from src.output.generate_html import HTML  # noqa: E402
+from src.plotting.plot import Plot  # noqa: E402
+from src.plotting.plot_progression import PlotProgression  # noqa: E402
+from src.plotting.plot_user import PlotUser  # noqa: E402
+from src.utils.action_logging import Logger  # noqa: E402
+from src.utils.delete_files import DeleteFiles  # noqa: E402
+from src.utils.helpers import isTextBasedBrowser  # noqa: E402
+from src.utils.metrics_store import MetricsStore  # noqa: E402
 
 
-# Methods to be run ----------------------------------------------------------------------------------------------------
+# Methods to be run ----------------------------------------------------------------------------------------------------  # noqa: E501
 def preprocess_data(filePath, logger):
     """
     Remove the below messages
-    - (Encryption, Security code, Missed group/voice/video calls, live locations, Attached contacts)
+    - (Encryption, Security code, Missed group/voice/video calls, live locations, Attached contacts)  # noqa: E501
     :param filePath:
     :param logger:
     :return:
     """
-    # Load and Clean the data ------------------------------------------------------------------------------------------
+    # Load and Clean the data ------------------------------------------------------------------------------------------  # noqa: E501
     preprocess = Preprocess(input_file=filePath, logger=logger)
     preprocess.read_file()
     preprocess.drop_message().drop_message(
         contains="security code changed"
     ).drop_message(contains="Messages and calls are end").drop_message(
         contains="Your security code with"
-    ).drop_message(
-        contains="Missed group voice call"
-    ).drop_message(
+    ).drop_message(contains="Missed group voice call").drop_message(
         contains="Missed voice call"
-    ).drop_message(
-        contains="Missed video call"
-    ).drop_message(
+    ).drop_message(contains="Missed video call").drop_message(
         contains="Missed group video call"
-    ).drop_message(
-        contains="live location shared"
-    ).drop_message(
+    ).drop_message(contains="live location shared").drop_message(
         contains=".vcf (file attached)"
     )
     preprocess.prepare_df()
@@ -73,7 +67,7 @@ def user_wise_analysis(preprocess, logger):
     :param logger:
     :return:
     """
-    # Start Analysis ---------------------------------------------------------------------------------------------------
+    # Start Analysis ---------------------------------------------------------------------------------------------------  # noqa: E501
     user_data_list = []
     for _, user in enumerate(preprocess.users + ["Overall"]):
         logger.write_logger(f"Starting for User: {user}")
@@ -82,7 +76,7 @@ def user_wise_analysis(preprocess, logger):
         else:
             user_subset_data = preprocess.pd_data[preprocess.pd_data["User"] == user]
 
-        # Fetch user statistics ----------------------------------------------------------------------------------------
+        # Fetch user statistics ----------------------------------------------------------------------------------------  # noqa: E501
         user_data = User(
             user_name=user,
             color_map=preprocess.color_map,
@@ -95,9 +89,7 @@ def user_wise_analysis(preprocess, logger):
             k=2
         ).get_link_count().get_media_count().get_emoji_count().get_total_stats().get_emoji_statistics().get_avg_stats().get_top_stats(
             data=preprocess.pd_data
-        ).get_response_time(
-            data=preprocess.pd_data
-        )
+        ).get_response_time(data=preprocess.pd_data)
 
         user_data_list.append(user_data)
 
@@ -173,15 +165,21 @@ def save_metrics(preprocess, user_data_list, store):
     store.save_df("monthly_msg_progression", monthly_msg)
 
     monthly_word = overall.get_userwise_monthly_word_counts()
-    monthly_word.rename(columns={"Word Count": "Avg. # of Words (per Msg)"}, inplace=True)
+    monthly_word.rename(
+        columns={"Word Count": "Avg. # of Words (per Msg)"}, inplace=True
+    )
     store.save_df("monthly_word_progression", monthly_word)
 
     monthly_emoji = overall.get_userwise_monthly_emoji_counts()
-    monthly_emoji.rename(columns={"Emoji Count": "Avg. # of Emojis (per Msg)"}, inplace=True)
+    monthly_emoji.rename(
+        columns={"Emoji Count": "Avg. # of Emojis (per Msg)"}, inplace=True
+    )
     store.save_df("monthly_emoji_progression", monthly_emoji)
 
     monthly_first_text = overall.get_first_text_monthly_count()
-    monthly_first_text.rename(columns={"Date": "No. of times user texted first"}, inplace=True)
+    monthly_first_text.rename(
+        columns={"Date": "No. of times user texted first"}, inplace=True
+    )
     store.save_df("monthly_first_text_ct", monthly_first_text)
 
     monthly_polarity = overall.get_monthly_avg_polarity()
@@ -189,29 +187,49 @@ def save_metrics(preprocess, user_data_list, store):
     store.save_df("monthly_avg_polarity", monthly_polarity)
 
     monthly_response = overall.get_userwise_monthly_response_time(data=data)
-    monthly_response.rename(columns={"Response (Min)": "Avg. Response (Min)"}, inplace=True)
+    monthly_response.rename(
+        columns={"Response (Min)": "Avg. Response (Min)"}, inplace=True
+    )
     store.save_df("monthly_response_time_progression", monthly_response)
 
     # --- per-user data ---
     for user_idx, user_data in enumerate(user_data_list):
         u = user_idx + 1
-        store.save_df(f"top_k_1words_u{u}", user_data.get_top_k_words(n_grams=1, k=10, normalize=False))
-        store.save_df(f"top_k_2words_u{u}", user_data.get_top_k_words(n_grams=2, k=10, normalize=False))
-        store.save_df(f"top_k_3words_u{u}", user_data.get_top_k_words(n_grams=3, k=10, normalize=False))
+        store.save_df(
+            f"top_k_1words_u{u}",
+            user_data.get_top_k_words(n_grams=1, k=10, normalize=False),
+        )
+        store.save_df(
+            f"top_k_2words_u{u}",
+            user_data.get_top_k_words(n_grams=2, k=10, normalize=False),
+        )
+        store.save_df(
+            f"top_k_3words_u{u}",
+            user_data.get_top_k_words(n_grams=3, k=10, normalize=False),
+        )
         top_emojis = user_data.get_top_k_emojis(k=5, normalize=True)
         top_emojis["Count %"] = np.round(top_emojis["Count"] * 100)
         store.save_df(f"top_k_emojis_u{u}", top_emojis)
-        store.save_json(f"word_cloud_1words_u{u}", user_data.get_words_for_wordcloud(n_grams=1))
-        store.save_json(f"word_cloud_2words_u{u}", user_data.get_words_for_wordcloud(n_grams=2))
-        store.save_json(f"word_cloud_3words_u{u}", user_data.get_words_for_wordcloud(n_grams=3))
+        store.save_json(
+            f"word_cloud_1words_u{u}", user_data.get_words_for_wordcloud(n_grams=1)
+        )
+        store.save_json(
+            f"word_cloud_2words_u{u}", user_data.get_words_for_wordcloud(n_grams=2)
+        )
+        store.save_json(
+            f"word_cloud_3words_u{u}", user_data.get_words_for_wordcloud(n_grams=3)
+        )
 
     # --- metadata ---
-    store.save_json("meta", {
-        "color_map": preprocess.color_map,
-        "min_year": int(min(data["Timestamp"].dt.year)),
-        "max_year": int(max(data["Timestamp"].dt.year)),
-        "user_colors": {ud.user_name: ud.user_color for ud in user_data_list},
-    })
+    store.save_json(
+        "meta",
+        {
+            "color_map": preprocess.color_map,
+            "min_year": int(min(data["Timestamp"].dt.year)),
+            "max_year": int(max(data["Timestamp"].dt.year)),
+            "user_colors": {ud.user_name: ud.user_color for ud in user_data_list},
+        },
+    )
 
 
 def plot_overall(store):
@@ -239,8 +257,11 @@ def plot_progression(store):
     """
     meta = store.load_json("meta")
     plot_progression_obj = PlotProgression(
-        store=store, color_map=meta["color_map"],
-        min_year=meta["min_year"], max_year=meta["max_year"], cumulative=False
+        store=store,
+        color_map=meta["color_map"],
+        min_year=meta["min_year"],
+        max_year=meta["max_year"],
+        cumulative=False,
     )
     plot_progression_obj.plot_monthly_msg_progression()
     plot_progression_obj.plot_monthly_word_progression()
@@ -273,7 +294,13 @@ if __name__ == "__main__":
 
     # Load command line arguments
     parser = ArgumentParser(formatter_class=RawTextHelpFormatter)
-    parser.add_argument("-f", "--file", dest="file", help="Path to the WhatsApp chat export .txt file.", required=True)
+    parser.add_argument(
+        "-f",
+        "--file",
+        dest="file",
+        help="Path to the WhatsApp chat export .txt file.",
+        required=True,
+    )
 
     args = parser.parse_args()
     filePath = args.file

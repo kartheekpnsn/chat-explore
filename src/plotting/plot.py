@@ -10,7 +10,6 @@ warnings.filterwarnings("ignore")
 
 
 class Plot:
-
     def __init__(self, store=None, color_map=None, save_path="plots/"):
         self.store = store
         self.color_map = color_map
