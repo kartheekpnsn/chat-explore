@@ -23,7 +23,8 @@ class Response:
         user A's last consecutive message. Response time = gap between those two
         timestamps.
         Returns dict keyed by user name:
-            {"median_response_min": float|None, "p75_response_min": float|None, "n_responses": int}  # noqa: E501
+            {"median_response_min": float|None, "p75_response_min": float|None,
+             "n_responses": int}
         """
         if self.data is None or self.data.empty:
             return {}

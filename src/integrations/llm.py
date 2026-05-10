@@ -64,10 +64,15 @@ class OpenAIUtils:
         if not self._available or self.__llm is None:
             logger.warning("LLM not available; skipping enrichment.")
             return None
-        SYSTEM_MESSAGE = """You are a helpful assistant that tells the meaning of a text given in chat language.  # noqa: E501
-        The text is in telugu written in English alphabets to English. Translate the text.  # noqa: E501
-        Do not translate if the text is already in English. In this case return the original text.  # noqa: E501
-        Else, Give me only the translated text, nothing additional"""
+        SYSTEM_MESSAGE = (
+            "You are a helpful assistant that tells the meaning of a text"
+            " given in chat language. "
+            "The text is in telugu written in English alphabets to English."
+            " Translate the text. "
+            "Do not translate if the text is already in English."
+            " In this case return the original text. "
+            "Else, Give me only the translated text, nothing additional"
+        )
         messages = [
             ("system", SYSTEM_MESSAGE),
             ("human", prompt),

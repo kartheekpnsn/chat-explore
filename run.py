@@ -4,9 +4,9 @@ Acknowledgement:
 - Link: https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/
 - Author Citation: https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/eem8gke/
 
-┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐  # noqa: E501
-<================== This entire code is placed in: https://github.com/kartheekpnsn/chat-explore ==================>  # noqa: E501
-┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐  # noqa: E501
+┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐
+<== https://github.com/kartheekpnsn/chat-explore ==>
+┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐
 """
 
 # Load System Modules --------------------------------------------------------------------------------------------------  # noqa: E501
@@ -34,7 +34,8 @@ from src.utils.metrics_store import MetricsStore  # noqa: E402
 def preprocess_data(filePath, logger):
     """
     Remove the below messages
-    - (Encryption, Security code, Missed group/voice/video calls, live locations, Attached contacts)  # noqa: E501
+    - (Encryption, Security code, Missed group/voice/video calls,
+       live locations, Attached contacts)
     :param filePath:
     :param logger:
     :return:

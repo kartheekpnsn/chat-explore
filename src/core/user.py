@@ -219,7 +219,6 @@ class User:
             "]+",
             flags=re.UNICODE,
         )
-        len(re.findall(emoji_pattern, text))
         text = emoji_pattern.sub(r"", text).strip()
         return text
 
@@ -253,7 +252,6 @@ class User:
         :return:
         """
         links_pattern = re.compile(r"http\S+", flags=re.UNICODE)
-        len(re.findall(links_pattern, text))
         text = links_pattern.sub(r"", text).strip()
         return text
 

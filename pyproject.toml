@@ -44,7 +44,6 @@ line-length = 88
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
-extend-per-file-ignores = {"run.py" = ["E501"], "src/output/get_excel.py" = ["E501"], "src/core/response.py" = ["E501"], "src/integrations/llm.py" = ["E501"]}
 
 [tool.ruff.format]
 quote-style = "double"
