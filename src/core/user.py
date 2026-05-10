@@ -388,7 +388,7 @@ class User:
             "In user.py (get_message_sentiment): Fetching the Sentiment of messages starts"  # noqa: E501
         )
         self.data["Polarity Score"] = self.data["Clean Message"].apply(
-            lambda x: Sentiment.vader(x)
+            lambda x: Sentiment.huggingface(x)
         )
         self.logger.write_logger(
             "In user.py (get_message_sentiment): Fetching the Sentiment of messages ends"  # noqa: E501
@@ -422,7 +422,7 @@ class User:
         else:
             self.top_k_negative_str = ""
         self.data["Polarity Score"] = self.data["Clean Message"].apply(
-            lambda x: Sentiment.vader(x)
+            lambda x: Sentiment.huggingface(x)
         )
         self.logger.write_logger(
             f"In user.py (get_top_sentiments): Fetching Top {k} Sentiments ends"
