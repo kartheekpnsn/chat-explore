@@ -2,7 +2,6 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 
 class Sentiment:
-
     def __init__(self):
         """ """
         pass

@@ -1,4 +1,5 @@
 import re
+
 import pandas as pd
 
 
@@ -49,13 +50,12 @@ _MIN_HEADER_COUNT = 2
 
 
 class ChatParser:
-
     def __init__(self, file_path: str):
         self.file_path = file_path
 
     def parse(self) -> pd.DataFrame:
         with open(self.file_path, "r", encoding="utf-8") as f:
-            lines = [l.rstrip("\n") for l in f if l.strip()]
+            lines = [line.rstrip("\n") for line in f if line.strip()]
 
         pattern, ts_format = self._detect_pattern(lines)
         rows = self._extract_rows(lines, pattern)
@@ -68,7 +68,7 @@ class ChatParser:
 
     def parse_lines(self, lines: list[str]) -> pd.DataFrame:
         """Parse from an already-loaded and filtered list of lines."""
-        non_empty = [l.rstrip("\n") for l in lines if l.strip()]
+        non_empty = [line.rstrip("\n") for line in lines if line.strip()]
         pattern, ts_format = self._detect_pattern(non_empty)
         rows = self._extract_rows(non_empty, pattern)
         df = pd.DataFrame(rows, columns=["Timestamp", "User", "Message"])
@@ -80,7 +80,7 @@ class ChatParser:
     def _detect_pattern(self, lines: list[str]):
         for pat in _PATTERNS:
             regex = pat["header"]
-            matched = sum(1 for l in lines if regex.match(l))
+            matched = sum(1 for line in lines if regex.match(line))
             if matched >= _MIN_HEADER_COUNT:
                 ts_format = self._detect_ts_format(lines, regex, pat["ts_formats"])
                 return regex, ts_format

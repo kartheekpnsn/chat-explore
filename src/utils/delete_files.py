@@ -1,9 +1,8 @@
-import shutil
 import os
+import shutil
 
 
 class DeleteFiles:
-
     def __init__(self, path_list=("logs/", "plots/")):
         """
 

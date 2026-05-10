@@ -5,7 +5,6 @@ logger = logging.getLogger(__name__)
 
 
 class OpenAIUtils:
-
     def __init__(self, LLM_TO_USE="gpt4o", EMBED_TO_USE="midasembed"):
         self.llm_to_use = LLM_TO_USE
         self.embed_to_use = EMBED_TO_USE
@@ -25,7 +24,6 @@ class OpenAIUtils:
             self.__embeddings = None
 
     def __load_llm(self):
-        from langchain.prompts import ChatPromptTemplate
         from langchain_openai import AzureChatOpenAI
 
         llm_api_key = os.environ.get(f"{self.llm_to_use}_api_key")
@@ -66,10 +64,15 @@ class OpenAIUtils:
         if not self._available or self.__llm is None:
             logger.warning("LLM not available; skipping enrichment.")
             return None
-        SYSTEM_MESSAGE = """You are a helpful assistant that tells the meaning of a text given in chat language.
-        The text is in telugu written in English alphabets to English. Translate the text.
-        Do not translate if the text is already in English. In this case return the original text.
-        Else, Give me only the translated text, nothing additional"""
+        SYSTEM_MESSAGE = (
+            "You are a helpful assistant that tells the meaning of a text"
+            " given in chat language. "
+            "The text is in telugu written in English alphabets to English."
+            " Translate the text. "
+            "Do not translate if the text is already in English."
+            " In this case return the original text. "
+            "Else, Give me only the translated text, nothing additional"
+        )
         messages = [
             ("system", SYSTEM_MESSAGE),
             ("human", prompt),

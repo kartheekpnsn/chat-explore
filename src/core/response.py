@@ -1,4 +1,5 @@
 from typing import Optional
+
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
@@ -6,7 +7,6 @@ from src.utils.action_logging import Logger
 
 
 class Response:
-
     def __init__(self, data: Optional[pd.DataFrame] = None, logger=None):
         if logger is None:
             self.logger = Logger(
@@ -23,7 +23,8 @@ class Response:
         user A's last consecutive message. Response time = gap between those two
         timestamps.
         Returns dict keyed by user name:
-            {"median_response_min": float|None, "p75_response_min": float|None, "n_responses": int}
+            {"median_response_min": float|None, "p75_response_min": float|None,
+             "n_responses": int}
         """
         if self.data is None or self.data.empty:
             return {}

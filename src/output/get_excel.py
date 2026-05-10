@@ -4,58 +4,41 @@ Acknowledgement:
 - Link: https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/
 - Author Citation: https://www.reddit.com/r/dataisbeautiful/comments/aiahpx/another_1_year_whatsapp_chat_visualization_oc/eem8gke/
 
-┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐
-<================== This entire code is placed in: https://github.com/kartheekpnsn/chat-explore ==================>
-┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐
+┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐
+<== https://github.com/kartheekpnsn/chat-explore ==>
+┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐ ┌∩┐(◣_◢)┌∩┐
 """
 
-# Load System Modules --------------------------------------------------------------------------------------------------
-import os
-import pickle
-import sys
+# Load System Modules --------------------------------------------------------------------------------------------------  # noqa: E501
 import warnings
-import webbrowser
 from argparse import ArgumentParser, RawTextHelpFormatter
-
-import tqdm
 
 warnings.filterwarnings("ignore")
 
-from src.utils.action_logging import Logger
-from src.utils.delete_files import DeleteFiles
-from src.output.generate_html import HTML
-from src.integrations.llm import OpenAIUtils
-from src.plotting.plot import Plot
-from src.plotting.plot_progression import PlotProgression
-from src.plotting.plot_user import PlotUser
-from src.core.preprocess import Preprocess
-from src.core.user import User
-from src.utils.helpers import isTextBasedBrowser
+from src.core.preprocess import Preprocess  # noqa: E402
+from src.utils.action_logging import Logger  # noqa: E402
 
 
-# Methods to be run ----------------------------------------------------------------------------------------------------
+# Methods to be run ----------------------------------------------------------------------------------------------------  # noqa: E501
 def preprocess_data(filePath, logger):
     """
     Remove the below messages
-    - (Encryption, Security code, Missed group/voice/video calls, live locations, Attached contacts)
+    - (Encryption, Security code, Missed group/voice/video calls,
+       live locations, Attached contacts)
     :param filePath:
     :param logger:
     :return:
     """
-    # Load and Clean the data ------------------------------------------------------------------------------------------
+    # Load and Clean the data ------------------------------------------------------------------------------------------  # noqa: E501
     preprocess = Preprocess(input_file=filePath, logger=logger)
     preprocess.read_file()
     preprocess.drop_message().drop_message(
         contains="security code changed"
     ).drop_message(contains="Missed group voice call").drop_message(
         contains="Missed voice call"
-    ).drop_message(
-        contains="Missed video call"
-    ).drop_message(
+    ).drop_message(contains="Missed video call").drop_message(
         contains="Missed group video call"
-    ).drop_message(
-        contains="live location shared"
-    ).drop_message(
+    ).drop_message(contains="live location shared").drop_message(
         contains=".vcf (file attached)"
     )
     preprocess.clean_data(True)
@@ -67,7 +50,7 @@ def preprocess_data(filePath, logger):
 
 
 if __name__ == "__main__":
-    # Setup Logger -----------------------------------------------------------------------------------------------------
+    # Setup Logger -----------------------------------------------------------------------------------------------------  # noqa: E501
     logger = Logger(log_flag=True, log_file="run", log_path="logs/")
 
     parser = ArgumentParser(formatter_class=RawTextHelpFormatter)
@@ -76,5 +59,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
     filePath = args.file
 
-    # Preprocess the data ----------------------------------------------------------------------------------------------
+    # Preprocess the data ----------------------------------------------------------------------------------------------  # noqa: E501
     preprocess = preprocess_data(filePath, logger)

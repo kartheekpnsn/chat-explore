@@ -1,14 +1,14 @@
 import re
-import string
-import warnings
-
-import numpy as np
-import pandas as pd
-import tldextract
-import nltk
 
 # this resolves SSL certificate issues for a MAC user
 import ssl
+import string
+import warnings
+
+import nltk
+import numpy as np
+import pandas as pd
+import tldextract
 
 # disable SSL check
 try:
@@ -21,22 +21,19 @@ else:
 nltk.download("stopwords")
 nltk.download("wordnet")
 
-# from nltk.corpus import stopwords # Removed it to fit requirements better
-from nltk.stem import PorterStemmer
-from nltk.stem import WordNetLemmatizer
-from nltk.util import ngrams
-
-from scipy import stats
-
-from src.utils.action_logging import Logger
-from src.core.response import Response
-from src.analysis.sentiment_analysis import Sentiment
-
 warnings.filterwarnings("ignore")
+
+# from nltk.corpus import stopwords # Removed it to fit requirements better
+from nltk.stem import PorterStemmer, WordNetLemmatizer  # noqa: E402
+from nltk.util import ngrams  # noqa: E402
+from scipy import stats  # noqa: E402
+
+from src.analysis.sentiment_analysis import Sentiment  # noqa: E402
+from src.core.response import Response  # noqa: E402
+from src.utils.action_logging import Logger  # noqa: E402
 
 
 class User:
-
     def __init__(
         self,
         user_name=None,
@@ -46,7 +43,6 @@ class User:
         users=None,
         logger=None,
     ):
-
         if logger is None:
             self.logger = Logger(log_flag=True, log_file="user", log_path="../logs/")
         else:
@@ -56,7 +52,7 @@ class User:
             user_name = "None"
         self.user_name = user_name
         self.logger.write_logger(
-            f"In user.py (__init__): Initializing members for user: {self.user_name} starts"
+            f"In user.py (__init__): Initializing members for user: {self.user_name} starts"  # noqa: E501
         )
 
         # Color code for the user;
@@ -181,16 +177,16 @@ class User:
 
         :return:
         """
-        # INIT FOR TOTALS =================================================================
+        # INIT FOR TOTALS =================================================================  # noqa: E501
         self._init_totals()
 
-        # INIT FOR AVERAGES ===============================================================
+        # INIT FOR AVERAGES ===============================================================  # noqa: E501
         self._init_averages()
 
-        # INIT FOR TOPS ===================================================================
+        # INIT FOR TOPS ===================================================================  # noqa: E501
         self._init_tops()
 
-        # INIT FOR PLOTS ==================================================================
+        # INIT FOR PLOTS ==================================================================  # noqa: E501
         self._init_plot_members()
 
     def prepare_dataframe(self):
@@ -222,7 +218,6 @@ class User:
             "]+",
             flags=re.UNICODE,
         )
-        emoticons_ct = len(re.findall(emoji_pattern, text))
         text = emoji_pattern.sub(r"", text).strip()
         return text
 
@@ -256,7 +251,6 @@ class User:
         :return:
         """
         links_pattern = re.compile(r"http\S+", flags=re.UNICODE)
-        links_ct = len(re.findall(links_pattern, text))
         text = links_pattern.sub(r"", text).strip()
         return text
 
@@ -391,13 +385,13 @@ class User:
         :return:
         """
         self.logger.write_logger(
-            "In user.py (get_message_sentiment): Fetching the Sentiment of messages starts"
+            "In user.py (get_message_sentiment): Fetching the Sentiment of messages starts"  # noqa: E501
         )
         self.data["Polarity Score"] = self.data["Clean Message"].apply(
             lambda x: Sentiment.vader(x)
         )
         self.logger.write_logger(
-            "In user.py (get_message_sentiment): Fetching the Sentiment of messages ends"
+            "In user.py (get_message_sentiment): Fetching the Sentiment of messages ends"  # noqa: E501
         )
         return self
 
@@ -875,21 +869,21 @@ class User:
         - Remove stop words
         :return:
         """
-        # doc = " ".join(self.data[self.data['Clean Message'] != ""]['Clean Message'].tolist())
+        # doc = " ".join(self.data[self.data['Clean Message'] != ""]['Clean Message'].tolist())  # noqa: E501
         doc = self.data[self.data["Clean Message"] != ""]["Clean Message"].tolist()
-        # Tokenize ==========================================================================
+        # Tokenize ==========================================================================  # noqa: E501
         self.logger.write_logger(
             "In user.py (prepare_word_statistics): Tokenization starts"
         )
         self.words, self.bigrams, self.trigrams = self.tokenize_words(doc)
         self.logger.write_logger(
-            f"\tFound {len(self.words)} words, {len(self.bigrams)} bigram words, {len(self.trigrams)} trigram words"
+            f"\tFound {len(self.words)} words, {len(self.bigrams)} bigram words, {len(self.trigrams)} trigram words"  # noqa: E501
         )
         self.logger.write_logger(
             "In user.py (prepare_word_statistics): Tokenization ends"
         )
 
-        # Remove stop words =================================================================
+        # Remove stop words =================================================================  # noqa: E501
         self.logger.write_logger(
             "In user.py (prepare_word_statistics): Stop word removal starts"
         )
@@ -897,7 +891,7 @@ class User:
             "In user.py (prepare_word_statistics): Stop word removal ends"
         )
 
-        # Lemmatize and Stem the words ======================================================
+        # Lemmatize and Stem the words ======================================================  # noqa: E501
         self.logger.write_logger(
             "In user.py (prepare_word_statistics): Stemming and Lemmatization starts"
         )
@@ -917,7 +911,7 @@ class User:
         """
         :return:
         """
-        # Statistics ========================================================================
+        # Statistics ========================================================================  # noqa: E501
         self.logger.write_logger(
             "In user.py (get_word_statistics): Formulating Word Statistics starts"
         )
@@ -1121,7 +1115,7 @@ class User:
         )
 
         self.logger.write_logger(
-            "\tIn user.py (get_top_stats): Formulating Longest Conversation Day Statistics starts"
+            "\tIn user.py (get_top_stats): Formulating Longest Conversation Day Statistics starts"  # noqa: E501
         )
         response_obj = Response(data=data, logger=self.logger)
         longest_conversation_date = response_obj.get_the_longest_conversation_date()
@@ -1155,7 +1149,7 @@ class User:
             ),
         }  # more time
         self.logger.write_logger(
-            "\tIn user.py (get_top_stats): Formulating Longest Conversation Day Statistics ends"
+            "\tIn user.py (get_top_stats): Formulating Longest Conversation Day Statistics ends"  # noqa: E501
         )
         self.logger.write_logger(
             "In user.py (get_top_stats): Formulating Top Statistics ends"
@@ -1164,7 +1158,7 @@ class User:
 
     def get_response_time(self, data=None):
         self.logger.write_logger(
-            f"In user.py (get_response_time): Fetching response time starts"
+            "In user.py (get_response_time): Fetching response time starts"
         )
         response_obj = Response(data=data, logger=self.logger)
         stats = response_obj.compute()
@@ -1183,7 +1177,7 @@ class User:
             self.avg_response_time = median if median is not None else 0.0
 
         self.logger.write_logger(
-            f"In user.py (get_response_time): Fetching response time ends"
+            "In user.py (get_response_time): Fetching response time ends"
         )
         return self
 
@@ -1246,7 +1240,7 @@ class User:
         :return:
         """
         self.logger.write_logger(
-            f"In user.py (get_words_for_wordcloud): Fetching Words for WordCloud starts"
+            "In user.py (get_words_for_wordcloud): Fetching Words for WordCloud starts"
         )
         if self.pd_word_df is None or self.pd_bigrams_df is None:
             self.pd_word_df, self.pd_bigrams_df, self.pd_trigrams_df = (
@@ -1261,7 +1255,7 @@ class User:
             words = self.pd_trigrams_df["Word"].tolist()
             words = ["".join(w.title().split()) for w in words]
         self.logger.write_logger(
-            f"In user.py (get_words_for_wordcloud): Fetching  Words for WordCloud ends"
+            "In user.py (get_words_for_wordcloud): Fetching  Words for WordCloud ends"
         )
         return words
 
@@ -1271,7 +1265,7 @@ class User:
         :return:
         """
         self.logger.write_logger(
-            f"In user.py (get_date_wise_n_msgs): Fetching Datewise # of Msgs starts"
+            "In user.py (get_date_wise_n_msgs): Fetching Datewise # of Msgs starts"
         )
         result = self.data.groupby(["Date"])["Message"].count().reset_index()
         result["Date"] = pd.to_datetime(result["Date"], format="%d-%b-%Y")
@@ -1279,7 +1273,7 @@ class User:
         result = result.sort_values(["Date"])
         result["Date"] = result["Date"].dt.strftime("%d-%b-%Y")
         self.logger.write_logger(
-            f"In user.py (get_date_wise_n_msgs): Fetching Datewise # of Msgs ends"
+            "In user.py (get_date_wise_n_msgs): Fetching Datewise # of Msgs ends"
         )
         return result
 
@@ -1289,7 +1283,7 @@ class User:
         :return:
         """
         self.logger.write_logger(
-            f"In user.py (get_domain_count): Fetching Domains from links starts"
+            "In user.py (get_domain_count): Fetching Domains from links starts"
         )
         pd_links_df = self.data[self.data["Links Count"] > 0][["User", "Links"]]
         pd_links_df["Links List"] = pd_links_df["Links"].apply(lambda x: x.split(";"))
@@ -1314,7 +1308,7 @@ class User:
         )
         pd_links_df.rename(columns={"Links List": "Count"}, inplace=True)
         self.logger.write_logger(
-            f"In user.py (get_domain_count): Fetching Domains from links ends"
+            "In user.py (get_domain_count): Fetching Domains from links ends"
         )
         return pd_links_df
 
@@ -1324,14 +1318,14 @@ class User:
         :return:
         """
         self.logger.write_logger(
-            f"In user.py (get_userwise_emoji_count): Fetching Userwise Emoji Count starts"
+            "In user.py (get_userwise_emoji_count): Fetching Userwise Emoji Count starts"  # noqa: E501
         )
         pd_emojis_df = self.data[["User", "Emoji Count", "TimeStamp", "Date"]]
         pd_emojis_df = (
             pd_emojis_df.groupby(["Date", "User"])["Emoji Count"].sum().reset_index()
         )
         self.logger.write_logger(
-            f"In user.py (get_userwise_emoji_count): Fetching Userwise Emoji Count ends"
+            "In user.py (get_userwise_emoji_count): Fetching Userwise Emoji Count ends"
         )
         return pd_emojis_df
 
@@ -1412,7 +1406,7 @@ class User:
         _tmp = _tmp.sort_values(["TimeStamp"])
         _tmp["Date"] = _tmp["TimeStamp"].dt.strftime("%d-%b-%Y")
         _tmp["Hour"] = _tmp["TimeStamp"].dt.hour
-        # Used to filter texting after waking up rather than during the mid night conversation
+        # Used to filter texting after waking up rather than during the mid night conversation  # noqa: E501
         _tmp = _tmp[_tmp.Hour > 6]
         grp_tmp = _tmp.groupby(["Date"])["User"].first().reset_index()
         grp_tmp["TimeStamp"] = pd.to_datetime(grp_tmp["Date"], format="%d-%b-%Y")

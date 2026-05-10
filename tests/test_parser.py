@@ -1,12 +1,13 @@
-import pytest
 import pandas as pd
+import pytest
+
 from src.core.parser import ChatParser, ParseError
 from tests.conftest import (
-    ANDROID_24H_CHAT,
     ANDROID_12H_CHAT,
+    ANDROID_24H_CHAT,
+    GARBAGE_CHAT,
     IOS_CHAT,
     MULTILINE_CHAT,
-    GARBAGE_CHAT,
 )
 
 

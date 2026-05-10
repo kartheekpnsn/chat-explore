@@ -1,7 +1,6 @@
+import os
 import subprocess
 import sys
-import os
-import pytest
 
 
 def run_cli(*args):
@@ -44,9 +43,11 @@ def test_empty_file_exits_nonzero(tmp_path):
 
 
 def test_write_data_creates_missing_directory(tmp_path):
-    import pandas as pd
-    from src.core.preprocess import Preprocess
     from unittest.mock import MagicMock
+
+    import pandas as pd
+
+    from src.core.preprocess import Preprocess
 
     p = Preprocess(input_file="fake.txt", logger=MagicMock())
     p.pd_data = pd.DataFrame(

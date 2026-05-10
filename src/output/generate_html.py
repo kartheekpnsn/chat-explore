@@ -7,7 +7,6 @@ from src.utils.action_logging import Logger
 
 
 class HTMLImages:
-
     def __init__(self, save_path="plots/", logger=None):
         """
 
@@ -42,7 +41,7 @@ class HTMLImages:
         :param image_path:
         :return:
         """
-        return f"data:image/png;base64,{base64.b64encode(open(image_path, 'rb').read()).decode('utf-8')}"
+        return f"data:image/png;base64,{base64.b64encode(open(image_path, 'rb').read()).decode('utf-8')}"  # noqa: E501
 
     def populate_word_cloud(self):
         """
@@ -50,7 +49,7 @@ class HTMLImages:
         :return:
         """
         self.logger.write_logger(
-            "In generate_html.py (HTMLImages/populate_word_cloud): Populating Word Cloud"
+            "In generate_html.py (HTMLImages/populate_word_cloud): Populating Word Cloud"  # noqa: E501
         )
         self.word_cloud_1words_u1 = HTMLImages.encode_decode_img(
             f"{self.save_path}/word_cloud_1words_u1.png"
@@ -78,7 +77,7 @@ class HTMLImages:
         :return:
         """
         self.logger.write_logger(
-            "In generate_html.py (HTMLImages/populate_rest_images): Populating Rest of the images"
+            "In generate_html.py (HTMLImages/populate_rest_images): Populating Rest of the images"  # noqa: E501
         )
         self.date_n_msgs = HTMLImages.encode_decode_img(
             f"{self.save_path}/date_n_msgs.png"
@@ -117,7 +116,6 @@ class HTMLImages:
 
 
 class HTMLStats:
-
     def __init__(self, user1, user2, overall, logger=None):
         self.user1 = user1
         self.user2 = user2
@@ -202,9 +200,9 @@ class HTMLStats:
         self.n_touches_u2 = self.user2.n_screen_touches
         self.n_touches_overall = self.overall.n_screen_touches
         # Days Texted (and %)
-        self.n_days_texted_u1 = f"{self.user1.n_days_chatted} ({round((self.user1.n_days_chatted/self.user1.n_days)*100)} %)"
-        self.n_days_texted_u2 = f"{self.user2.n_days_chatted} ({round((self.user2.n_days_chatted/self.user2.n_days)*100)} %)"
-        self.n_days_texted_overall = f"{self.overall.n_days_chatted} ({round((self.overall.n_days_chatted/self.overall.n_days)*100)} %)"
+        self.n_days_texted_u1 = f"{self.user1.n_days_chatted} ({round((self.user1.n_days_chatted / self.user1.n_days) * 100)} %)"  # noqa: E501
+        self.n_days_texted_u2 = f"{self.user2.n_days_chatted} ({round((self.user2.n_days_chatted / self.user2.n_days) * 100)} %)"  # noqa: E501
+        self.n_days_texted_overall = f"{self.overall.n_days_chatted} ({round((self.overall.n_days_chatted / self.overall.n_days) * 100)} %)"  # noqa: E501
         # Most Used Word
         self.word_u1 = self.user1.most_used_word["Word"]
         self.word_u2 = self.user2.most_used_word["Word"]
@@ -275,7 +273,7 @@ class HTMLStats:
         :return:
         """
         self.logger.write_logger(
-            "In generate_html.py (HTMLStats/populate_sentiments): Populating Sentiments starts"
+            "In generate_html.py (HTMLStats/populate_sentiments): Populating Sentiments starts"  # noqa: E501
         )
         self.top_k_positive_u1 = self.user1.top_k_positive_str
         self.top_k_positive_u2 = self.user2.top_k_positive_str
@@ -284,7 +282,7 @@ class HTMLStats:
         self.top_k_negative_u2 = self.user2.top_k_negative_str
 
         self.logger.write_logger(
-            "In generate_html.py (HTMLStats/populate_sentiments): Populating Sentiments ends"
+            "In generate_html.py (HTMLStats/populate_sentiments): Populating Sentiments ends"  # noqa: E501
         )
         return self
 
@@ -348,7 +346,7 @@ class HTMLStats:
         :return:
         """
         self.logger.write_logger(
-            "In generate_html.py (HTMLStats/populate_response): Populating Response Times"
+            "In generate_html.py (HTMLStats/populate_response): Populating Response Times"  # noqa: E501
         )
         self.avg_response_u1 = self.user1.avg_response_time
         self.avg_response_u2 = self.user2.avg_response_time
@@ -361,7 +359,7 @@ class HTMLStats:
         :return:
         """
         self.logger.write_logger(
-            "In generate_html.py (HTMLStats/populate_emoji_ranks): Populating Emoji ranks"
+            "In generate_html.py (HTMLStats/populate_emoji_ranks): Populating Emoji ranks"  # noqa: E501
         )
         if (
             self.user1.pd_emoji_rank.shape[0] == 5
@@ -382,7 +380,6 @@ class HTMLStats:
 
 
 class HTML:
-
     def __init__(
         self,
         user1,
