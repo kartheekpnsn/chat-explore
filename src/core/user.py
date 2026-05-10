@@ -43,7 +43,6 @@ class User:
         users=None,
         logger=None,
     ):
-
         if logger is None:
             self.logger = Logger(log_flag=True, log_file="user", log_path="../logs/")
         else:
