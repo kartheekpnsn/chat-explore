@@ -18,6 +18,7 @@ The project is implemented as a Python CLI workflow with modular parsing, prepro
 
 * Supports multiple WhatsApp export formats through automatic format detection.
 * Handles multi-line messages correctly during parsing.
+* Uses a local Hugging Face sentiment model for English, Hinglish, and romanized Telugu-style chat text.
 * Computes per-user and overall metrics, including response-time statistics.
 * Produces a single shareable HTML report file with embedded plot images.
 * Includes automated tests for parser behavior, response-time logic, and core CLI I/O paths.
@@ -44,6 +45,10 @@ Date parsing supports day-first and month-first interpretations when necessary.
 
 * Python 3.11 or later.
 * UV package manager.
+* Internet access on the first sentiment run so Hugging Face can download the local model.
+
+Sentiment analysis runs locally with `cardiffnlp/twitter-xlm-roberta-base-sentiment`.
+If available, the model uses CUDA first, then Apple Silicon MPS, and otherwise falls back to CPU.
 
 ### Installation
 
@@ -102,7 +107,7 @@ The generated HTML report includes:
 * Response analysis: Average response time per participant and overall.
 * Top patterns: Active days, longest conversation windows, top n-grams.
 * Emoji insights: Ranked emoji usage by participant.
-* Temporal trends: Monthly messaging, words, emojis, sentiment, and first-text behavior.
+* Temporal trends: Monthly messaging, words, emojis, Hugging Face sentiment, and first-text behavior.
 * Visual summaries: Word clouds and timeline plots.
 
 ## Development
